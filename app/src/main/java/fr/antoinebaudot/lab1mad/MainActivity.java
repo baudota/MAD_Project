@@ -9,6 +9,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -85,9 +86,11 @@ public class MainActivity extends AppCompatActivity {
                     name = currentUser.getName();
                     mail = currentUser.getEmail();
                     bio = currentUser.getShortBio();
+                    photo = (Bitmap) decodeBase64(currentUser.getProfilePicture());
                     textName.setText(name);
                     textMail.setText(mail);
                     textBio.setText(bio);
+                    photoUser.setImageBitmap(photo);
                 }
 
                 @Override
@@ -215,6 +218,13 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
+    }
+
+
+    public static Bitmap decodeBase64(String input)
+    {
+        byte[] decodedBytes = Base64.decode(input, 0);
+        return BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
     }
 
 }

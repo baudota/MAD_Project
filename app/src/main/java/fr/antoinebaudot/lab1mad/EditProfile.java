@@ -13,6 +13,7 @@ import android.support.v4.content.FileProvider;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -50,6 +51,7 @@ public class EditProfile extends AppCompatActivity {
     private Context context = this ;
     private int REQUEST_PHOTO = 2 ;
     private Bitmap image ;
+    private Boolean saveImage = false ;
     private DatabaseReference mDatabase ;
 
 
@@ -110,6 +112,7 @@ public class EditProfile extends AppCompatActivity {
                 String name = editName.getText().toString();
                 String mail = editMail.getText().toString();
                 String bio = editBio.getText().toString();
+                String encoded ;
 
 
 
@@ -123,6 +126,11 @@ public class EditProfile extends AppCompatActivity {
                     mDatabase.child("users").child(user.getUid()).child("name").setValue(name);
                     mDatabase.child("users").child(user.getUid()).child("email").setValue(mail);
                     mDatabase.child("users").child(user.getUid()).child("shortBio").setValue(bio);
+                    if (saveImage) {
+                        encoded = encodeToBase64(image, Bitmap.CompressFormat.JPEG,100);
+                        mDatabase.child("users").child(user.getUid()).child("profilePicture").setValue(encoded);
+                    }
+
 
                     returnHome(name,mail,bio);
                 }
@@ -166,14 +174,21 @@ public class EditProfile extends AppCompatActivity {
 
    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
         if (requestCode == REQUEST_PHOTO && resultCode == RESULT_OK) {
+            saveImage = true ;
             Bundle extras = data.getExtras();
             image = (Bitmap) extras.get("data");
             photoUser.setImageBitmap(image);
         }
     }
 
-
+    public static String encodeToBase64(Bitmap image, Bitmap.CompressFormat compressFormat, int quality)
+    {
+        ByteArrayOutputStream byteArrayOS = new ByteArrayOutputStream();
+        image.compress(compressFormat, quality, byteArrayOS);
+        return Base64.encodeToString(byteArrayOS.toByteArray(), Base64.DEFAULT);
+    }
 
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {

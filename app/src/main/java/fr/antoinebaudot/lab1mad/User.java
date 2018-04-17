@@ -8,6 +8,7 @@ public class User {
     private String name ;
     private String email ;
     private String shortBio ;
+    private String profilePicture ;
 
     public User(){};
 
@@ -21,5 +22,9 @@ public class User {
 
     public String getShortBio() {
         return shortBio;
+    }
+
+    public String getProfilePicture() {
+        return profilePicture;
     }
 }
