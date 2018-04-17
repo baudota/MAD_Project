@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Sharespeare</string>
+    <string name="nameHint">Name</string>
+    <string name="mailHint">Mail@mail.com</string>
+    <string name="bioHint">Short bio</string>
+    <string name="editAction">Edit</string>
+    <string name="title_activity_login">Sign in</string>
+    <string name="signUp">Sign Up</string>
+    <string name="passwdHint">Password</string>
+    <string name="checkPassword">Please enter the same passwords</string>
+    <string name="missingInformations">Missing Informations</string>
+
+</resources>
