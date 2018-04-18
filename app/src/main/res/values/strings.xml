@@ -9,5 +9,6 @@
     <string name="passwdHint">Password</string>
     <string name="checkPassword">Please enter the same passwords</string>
     <string name="missingInformations">Missing Informations</string>
+    <string name="authFailed">Authentication fail, wrong email or password</string>
 
 </resources>

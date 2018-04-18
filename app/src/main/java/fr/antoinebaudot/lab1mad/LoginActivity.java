@@ -63,7 +63,14 @@ public class LoginActivity extends AppCompatActivity {
                 //ref.setValue("loginTest");
                 email = loginMailEditText.getText().toString();
                 password = passwdEdittext.getText().toString();
-                signIn();
+
+                if (email.equals("") || password.equals("")) {
+                    Toast.makeText(LoginActivity.this,getResources().getString(R.string.missingInformations),Toast.LENGTH_LONG).show();
+                } else {
+                    signIn();
+                }
+
+
 
             }
         });
@@ -93,8 +100,7 @@ public class LoginActivity extends AppCompatActivity {
                     startActivity(intent);
 
                 } else {
-                    Toast.makeText(LoginActivity.this, "Authentication failed.",
-                            Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, getResources().getString(R.string.authFailed), Toast.LENGTH_SHORT).show();
                 }
 
             }
