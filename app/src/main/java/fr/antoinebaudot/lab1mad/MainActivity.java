@@ -86,7 +86,9 @@ public class MainActivity extends AppCompatActivity {
                     name = currentUser.getName();
                     mail = currentUser.getEmail();
                     bio = currentUser.getShortBio();
-                    photo = (Bitmap) decodeBase64(currentUser.getProfilePicture());
+                    if (currentUser.getProfilePicture() != null){
+                        photo = (Bitmap) decodeBase64(currentUser.getProfilePicture());
+                    }
                     textName.setText(name);
                     textMail.setText(mail);
                     textBio.setText(bio);

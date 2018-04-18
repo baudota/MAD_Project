@@ -127,7 +127,7 @@ public class EditProfile extends AppCompatActivity {
                     mDatabase.child("users").child(user.getUid()).child("email").setValue(mail);
                     mDatabase.child("users").child(user.getUid()).child("shortBio").setValue(bio);
                     if (saveImage) {
-                        encoded = encodeToBase64(image, Bitmap.CompressFormat.JPEG,100);
+                        encoded = encodeToBase64(image, Bitmap.CompressFormat.PNG,100);
                         mDatabase.child("users").child(user.getUid()).child("profilePicture").setValue(encoded);
                     }
 
