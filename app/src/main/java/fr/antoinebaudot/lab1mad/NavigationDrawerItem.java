@@ -11,10 +11,10 @@ import java.util.List;
 
 public class NavigationDrawerItem {
 
-    private String title ;
+    private int title ;
     private int imageId ;
 
-    public String getTitle() {
+    public int getTitle() {
         return title;
     }
 
@@ -22,7 +22,7 @@ public class NavigationDrawerItem {
         return imageId;
     }
 
-    public void setTitle(String title) {
+    public void setTitle(int title) {
         this.title = title;
     }
 
@@ -34,7 +34,7 @@ public class NavigationDrawerItem {
         List<NavigationDrawerItem> dataList = new ArrayList<>();
 
         int[] imageIds = getImages();
-        String[] titles = getTitles();
+        int[] titles = getTitles();
 
         for (int i =0 ; i < titles.length; i++){
             NavigationDrawerItem navItem = new NavigationDrawerItem();
@@ -49,14 +49,17 @@ public class NavigationDrawerItem {
     private static int[] getImages(){
         return new int[]{
                 R.drawable.ic_person_black_24dp,
-                R.drawable.ic_action_edit,
-                R.drawable.ic_photo_camera_black_24dp
+                R.drawable.icon_book,
+                R.drawable.icon_disconnect
         };
     }
 
-    private static String[] getTitles() {
-        return new String[] {
-                "item1","item2","item3"
+    private static int[] getTitles() {
+
+        return new int[] {
+                R.string.menuProfile,
+                R.string.menuUserBooks,
+                R.string.menuLeave
         };
     }
 }

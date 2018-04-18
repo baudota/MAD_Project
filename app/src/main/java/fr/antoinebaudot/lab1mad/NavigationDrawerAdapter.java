@@ -1,6 +1,7 @@
 package fr.antoinebaudot.lab1mad;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Collections;
 import java.util.List;
@@ -38,9 +41,9 @@ public  class NavigationDrawerAdapter extends RecyclerView.Adapter<NavigationDra
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
-        NavigationDrawerItem current = mDataList.get(position);
 
-        holder.title.setText(current.getTitle());
+        NavigationDrawerItem current = mDataList.get(position);
+        holder.title.setText(context.getResources().getString(current.getTitle()));
         holder.imgIcon.setImageResource(current.getImageId());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -52,7 +55,7 @@ public  class NavigationDrawerAdapter extends RecyclerView.Adapter<NavigationDra
 
     @Override
     public int getItemCount() {
-        return 0;
+        return mDataList.size();
     }
 
 

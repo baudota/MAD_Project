@@ -108,10 +108,10 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-       myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
-   // myToolbar.inflateMenu(R.menu.actionbar_layout);
+        myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        //myToolbar.inflateMenu(R.menu.actionbar_layout);
 
-        setSupportActionBar(myToolbar);
+       setSupportActionBar(myToolbar);
 
         ActionBar ab = getSupportActionBar();
         ab.setDisplayHomeAsUpEnabled(false);
@@ -121,6 +121,7 @@ public class MainActivity extends AppCompatActivity {
         View mCustomView = mInflater.inflate(R.layout.actionbar, null);
         ab.setCustomView(mCustomView);
         ab.setDisplayShowCustomEnabled(true);
+
 
         editAction = (ImageView) findViewById(R.id.editAction);
         openNav = (ImageView) findViewById(R.id.openNav);
