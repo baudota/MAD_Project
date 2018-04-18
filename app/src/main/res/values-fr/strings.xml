@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Lab1MAD</string>
+    <string name="app_name">Sharespeare</string>
     <string name="nameHint">Nom</string>
     <string name="mailHint">Mail@mail.com</string>
     <string name="bioHint">Courte description</string>
