@@ -16,9 +16,7 @@
         android:textStyle="italic"
         android:fontFamily="serif"/>
 
-    <android.support.design.widget.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+
 
         <android.support.design.widget.TextInputEditText   android:id="@+id/loginMail"
             android:layout_width="match_parent"
@@ -27,34 +25,29 @@
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:padding="16dp"
-            android:background="@drawable/custom_edit_text_login"/>
+            android:background="@drawable/custom_edit_text_login"
+            android:maxLines="1"/>
 
-    </android.support.design.widget.TextInputLayout>
-
-
-
-    <android.support.design.widget.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
 
         <android.support.design.widget.TextInputEditText   android:id="@+id/loginPassword"
             android:layout_width="match_parent"
+            android:layout_marginTop="16dp"
             android:layout_height="wrap_content"
             android:hint="@string/passwdHint"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:padding="16dp"
             android:background="@drawable/custom_edit_text_login"
-            android:inputType="textPassword"/>
+            android:inputType="textPassword"
+            android:maxLines="1"/>
 
 
-    </android.support.design.widget.TextInputLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginTop="15dp">
+        android:layout_marginTop="16dp">
 
         <Button android:id="@+id/loginBtn"
             android:layout_width="0dp"

@@ -27,7 +27,8 @@
             android:layout_marginRight="16dp"
             android:background="@drawable/custom_edit_text_login"
             android:hint="@string/mailHint"
-            android:padding="16dp" />
+            android:padding="16dp"
+            android:maxLines="1"/>
 
     </android.support.design.widget.TextInputLayout>
 
@@ -45,7 +46,8 @@
             android:background="@drawable/custom_edit_text_login"
             android:hint="@string/passwdHint"
             android:inputType="textPassword"
-            android:padding="16dp" />
+            android:padding="16dp"
+            android:maxLines="1"/>
 
 
     </android.support.design.widget.TextInputLayout>
