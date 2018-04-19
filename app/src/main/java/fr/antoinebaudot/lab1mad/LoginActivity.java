@@ -2,6 +2,7 @@ package fr.antoinebaudot.lab1mad;
 
 import android.app.DownloadManager;
 import android.content.Intent;
+import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -36,6 +37,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_login);
 
         loginMailEditText = (EditText) findViewById(R.id.loginMail);
@@ -52,7 +54,9 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
                 //start new user activity
                 Intent intent = new Intent(LoginActivity.this,SignUpActivity.class);
+                intent.putExtra("MAIL_KEY",loginMailEditText.getText().toString());
                 startActivity(intent);
+
             }
         });
 
@@ -82,11 +86,11 @@ public class LoginActivity extends AppCompatActivity {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        if (currentUser != null) {
+        /*if (currentUser != null) {
             Intent intent = new Intent(LoginActivity.this,MainActivity.class);
             startActivity(intent);
             finish();
-        }
+        }*/
     }
 
 

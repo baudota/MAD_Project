@@ -5,11 +5,13 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,7 +19,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import android.support.v4.app.FragmentActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -36,14 +38,14 @@ public class MainActivity extends AppCompatActivity {
     private TextView textMail ;
     private TextView textBio ;
     private ImageView editAction ;
+    private ImageView openNav ;
     private ImageView photoUser ;
     private String name, mail, bio  = "" ;
     static String NAME_KEY = "name" ;
     static String MAIL_KEY = "mail" ;
     static String BIO_KEY = "bio" ;
     static String PHOTO_KEY = "photo" ;
-
-
+    private Toolbar myToolbar ;
     private Context context = this ;
     private Bitmap photo = null ;
     private DatabaseReference mDatabase;
@@ -76,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
         photoUser = (ImageView) findViewById(R.id.photoUser);
 
 
+
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             final String uid = user.getUid();
@@ -105,8 +108,10 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
-        setSupportActionBar(myToolbar);
+        myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        //myToolbar.inflateMenu(R.menu.actionbar_layout);
+
+       setSupportActionBar(myToolbar);
 
         ActionBar ab = getSupportActionBar();
         ab.setDisplayHomeAsUpEnabled(false);
@@ -119,13 +124,10 @@ public class MainActivity extends AppCompatActivity {
 
 
         editAction = (ImageView) findViewById(R.id.editAction);
+        openNav = (ImageView) findViewById(R.id.openNav);
 
 
-     /*   if (textName != null || textMail != null | textBio != null) {
-            textName.setText(name);
-            textMail.setText(mail);
-            textBio.setText(bio);
-        }*/
+        setUpDrawer();
 
 
 
@@ -136,6 +138,8 @@ public class MainActivity extends AppCompatActivity {
                 editUser();
             }
         });
+
+
 
 
     }
@@ -152,6 +156,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+
+    private void setUpDrawer() {
+        NavigationDrawerFragment drawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.nav_drawer_fragment);
+        final DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
+        drawerFragment.setUpDrawer(R.id.nav_drawer_fragment,drawerLayout, myToolbar);
+
+        openNav.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                drawerLayout.openDrawer(Gravity.LEFT);
+            }
+        });
+
+    }
 
 
     @Override

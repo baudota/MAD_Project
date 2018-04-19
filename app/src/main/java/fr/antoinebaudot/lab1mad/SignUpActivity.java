@@ -1,5 +1,6 @@
 package fr.antoinebaudot.lab1mad;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -43,6 +44,9 @@ public class SignUpActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference().getRoot();
 
+
+        newUserMailEditText.setText(getIntent().getStringExtra("MAIL_KEY"));
+
         signUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -81,6 +85,11 @@ public class SignUpActivity extends AppCompatActivity {
                     userMap.put("email",user.getEmail().toString() );
                     userMap.put("name","test");
                     usersRef.child(user.getUid()).setValue(userMap);
+
+
+                    Intent intent = new Intent(SignUpActivity.this,MainActivity.class);
+                    startActivity(intent);
+                    finish();
 
                 } else {
                     // If sign in fails, display a message to the user.
