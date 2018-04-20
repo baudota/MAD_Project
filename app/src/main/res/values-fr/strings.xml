@@ -15,4 +15,12 @@
     <string name="menuProfile">Profil</string>
     <string name="menuUserBooks">Vos livres</string>
     <string name="menuLeave">Déconnexion</string>
+    <string name="isbn">ISBN</string>
+    <string name="author">Auteur</string>
+    <string name="subtitle">Sous-titre</string>
+    <string name="title">Titre</string>
+    <string name="description">Description</string>
+    <string name="barcode">Scanner le code barre</string>
+    <string name="clear">Vider</string>
+    <string name="findByIsbn">Chercher par ISBN</string>
 </resources>

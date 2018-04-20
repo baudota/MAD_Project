@@ -1,5 +1,6 @@
 package fr.antoinebaudot.lab1mad;
 
+import android.content.Intent;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -54,11 +55,12 @@ public class UserBooks extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        /*switch(item.getItemId()){
-            case R.id.editProfileItem :
-                editUser();
+        switch(item.getItemId()){
+            case R.id.addBook :
+                Intent intent = new Intent(UserBooks.this, AddBook.class);
+                startActivity(intent);
                 break ;
-        }*/
+        }
         return true ;
 
 
