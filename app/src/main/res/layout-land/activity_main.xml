@@ -15,18 +15,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="fr.antoinebaudot.lab1mad.MainActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/photoBackground">
 
 
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/my_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        android:elevation="4dp"
-        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+    <include layout="@layout/toolbar"
+        android:id="@+id/showProfileToolbar"/>
 
 
     <LinearLayout
@@ -43,12 +38,14 @@
         android:layout_weight="1.5"
         android:background="@color/photoBackground">
 
-        <ImageView    android:id="@+id/photoUser"
+       <ImageView    android:id="@+id/photoUser"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="16dp"
             android:src="@drawable/ic_person_black_24dp"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center"
+           android:layout_margin="5dp"/>
+
 
 
     </LinearLayout>
@@ -57,7 +54,9 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="2"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:background="@drawable/user_info"
+        android:layout_margin="10dp">
 
 
 
@@ -69,6 +68,7 @@
             android:layout_weight="1"
             android:layout_marginRight="16dp"
             android:layout_marginLeft="16dp"
+            android:textColor="@color/colorPrimaryDark"
             />
 
         <TextView   android:id="@+id/textMail"
@@ -77,7 +77,8 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:layout_marginRight="16dp"
-            android:layout_marginLeft="16dp" />
+            android:layout_marginLeft="16dp"
+            android:textColor="@color/colorPrimaryDark"/>
 
         <TextView   android:id="@+id/textBio"
             android:layout_width="match_parent"
@@ -85,7 +86,8 @@
             android:layout_height="0dp"
             android:layout_weight="3"
             android:layout_marginRight="16dp"
-            android:layout_marginLeft="16dp" />
+            android:layout_marginLeft="16dp"
+            android:textColor="@color/colorPrimaryDark"/>
 
 
     </LinearLayout>

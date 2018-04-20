@@ -15,6 +15,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -41,8 +43,6 @@ public class EditProfile extends AppCompatActivity {
     private EditText editName ;
     private EditText editMail ;
     private EditText editBio ;
-    private ImageView saveBtn ;
-    private ImageView editBtn ;
     private ImageView photoUser ;
     static String NAME_KEY = "name" ;
     static String MAIL_KEY = "mail" ;
@@ -76,24 +76,15 @@ public class EditProfile extends AppCompatActivity {
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
 
-        ActionBar ab = getSupportActionBar();
-        ab.setDisplayHomeAsUpEnabled(false);
-        ab.setDisplayShowTitleEnabled(false);
 
-        LayoutInflater mInflater = LayoutInflater.from(this);
-        View mCustomView = mInflater.inflate(R.layout.actionbar, null);
-        ab.setCustomView(mCustomView);
-        ab.setDisplayShowCustomEnabled(true);
 
 
         editName = (EditText) findViewById(R.id.editTextName);
         editMail = (EditText) findViewById(R.id.editTextMail);
         editBio = (EditText) findViewById(R.id.editTextBio);
         photoUser = (ImageView) findViewById(R.id.userPhoto);
-        saveBtn = (ImageView) findViewById(R.id.saveAction);
-        editBtn = (ImageView) findViewById(R.id.editAction);
-        saveBtn.setVisibility(View.VISIBLE);
-        editBtn.setVisibility(View.GONE);
+
+
 
 
         editName.setText(getIntent().getExtras().getString(NAME_KEY));
@@ -105,38 +96,7 @@ public class EditProfile extends AppCompatActivity {
 
         }
 
-        saveBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
 
-                String name = editName.getText().toString();
-                String mail = editMail.getText().toString();
-                String bio = editBio.getText().toString();
-                String encoded ;
-
-
-
-
-                if (name.equals("") || mail.equals("") || bio.equals("")) {
-                    Toast.makeText(context,getResources().getString(R.string.missingInformations),Toast.LENGTH_LONG).show();
-                } else {
-
-                    //we save the new informations into the database
-                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                    mDatabase.child("users").child(user.getUid()).child("name").setValue(name);
-                    mDatabase.child("users").child(user.getUid()).child("email").setValue(mail);
-                    mDatabase.child("users").child(user.getUid()).child("shortBio").setValue(bio);
-                    if (saveImage) {
-                        encoded = encodeToBase64(image, Bitmap.CompressFormat.PNG,100);
-                        mDatabase.child("users").child(user.getUid()).child("profilePicture").setValue(encoded);
-                    }
-
-
-                    returnHome(name,mail,bio);
-                }
-
-            }
-        });
 
 
         photoUser.setOnClickListener(new View.OnClickListener() {
@@ -162,6 +122,37 @@ public class EditProfile extends AppCompatActivity {
         finish();
     }
 
+
+    public void saveProfile() {
+
+        String name = editName.getText().toString();
+        String mail = editMail.getText().toString();
+        String bio = editBio.getText().toString();
+        String encoded ;
+
+
+
+
+        if (name.equals("") || mail.equals("") || bio.equals("")) {
+            Toast.makeText(context,getResources().getString(R.string.missingInformations),Toast.LENGTH_LONG).show();
+        } else {
+
+            //we save the new informations into the database
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            mDatabase.child("users").child(user.getUid()).child("name").setValue(name);
+            mDatabase.child("users").child(user.getUid()).child("email").setValue(mail);
+            user.updateEmail(mail);
+            mDatabase.child("users").child(user.getUid()).child("shortBio").setValue(bio);
+            if (saveImage) {
+                encoded = encodeToBase64(image, Bitmap.CompressFormat.PNG,100);
+                mDatabase.child("users").child(user.getUid()).child("profilePicture").setValue(encoded);
+            }
+
+
+            returnHome(name,mail,bio);
+        }
+
+    }
 
 
 
@@ -230,5 +221,27 @@ public class EditProfile extends AppCompatActivity {
         // call superclass to save any view hierarchy
 
     }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.toolbar_menu_editprofile,menu);
+        return true ;
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch(item.getItemId()){
+            case R.id.saveProfileItem:
+                saveProfile();
+                break ;
+        }
+        return true ;
+
+
+    }
+
 
 }

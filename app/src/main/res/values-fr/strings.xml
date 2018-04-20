@@ -4,4 +4,15 @@
     <string name="mailHint">Mail@mail.com</string>
     <string name="bioHint">Courte description</string>
     <string name="editAction">Modifier</string>
+    <string name="signIn">Connexion</string>
+    <string name="signUp">Inscription</string>
+    <string name="passwdHint">Mot de passe (6 car min)</string>
+    <string name="checkPassword">Mots de passe différents</string>
+    <string name="missingInformations">Informations manquantes</string>
+    <string name="authFailed">Echec, email ou mot de passe erroné</string>
+    <string name="drawer_open">Drawer open</string>
+    <string name="drawer_close">Drawer close</string>
+    <string name="menuProfile">Profil</string>
+    <string name="menuUserBooks">Vos livres</string>
+    <string name="menuLeave">Déconnexion</string>
 </resources>

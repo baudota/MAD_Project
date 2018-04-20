@@ -20,7 +20,7 @@
 
 
 
-    <android.support.design.widget.TextInputEditText
+    <EditText
         android:id="@+id/newUserName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -30,7 +30,7 @@
         android:padding="16dp"
         android:background="@drawable/custom_edit_text_login"/>
 
-    <android.support.design.widget.TextInputEditText
+    <EditText
         android:id="@+id/newUserMail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -42,7 +42,7 @@
         android:layout_marginTop="10dp"/>
 
 
-    <android.support.design.widget.TextInputEditText
+    <EditText
         android:id="@+id/newUserPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -55,7 +55,7 @@
         android:layout_marginTop="10dp"/>
 
 
-    <android.support.design.widget.TextInputEditText
+    <EditText
         android:id="@+id/newUserPasswordCheck"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

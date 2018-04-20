@@ -6,7 +6,7 @@
     <string name="editAction">Edit</string>
     <string name="signIn">Sign In</string>
     <string name="signUp">Sign Up</string>
-    <string name="passwdHint">Password</string>
+    <string name="passwdHint">Password (6 characters min)</string>
     <string name="checkPassword">Please enter the same passwords</string>
     <string name="missingInformations">Missing Informations</string>
     <string name="authFailed">Authentication fail, wrong email or password</string>
@@ -14,6 +14,6 @@
     <string name="drawer_close">Drawer close</string>
     <string name="menuProfile">User profile</string>
     <string name="menuUserBooks">Your books</string>
-    <string name="menuLeave">Disconnect</string>
+    <string name="menuLeave">Sign out</string>
 
 </resources>

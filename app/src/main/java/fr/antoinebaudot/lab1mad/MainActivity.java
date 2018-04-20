@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -13,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Base64;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -37,8 +40,6 @@ public class MainActivity extends AppCompatActivity {
     private TextView textName ;
     private TextView textMail ;
     private TextView textBio ;
-    private ImageView editAction ;
-    private ImageView openNav ;
     private ImageView photoUser ;
     private String name, mail, bio  = "" ;
     static String NAME_KEY = "name" ;
@@ -108,39 +109,11 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-        myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
-        //myToolbar.inflateMenu(R.menu.actionbar_layout);
-
-       setSupportActionBar(myToolbar);
-
-        ActionBar ab = getSupportActionBar();
-        ab.setDisplayHomeAsUpEnabled(false);
-        ab.setDisplayShowTitleEnabled(false);
-
-        LayoutInflater mInflater = LayoutInflater.from(this);
-        View mCustomView = mInflater.inflate(R.layout.actionbar, null);
-        ab.setCustomView(mCustomView);
-        ab.setDisplayShowCustomEnabled(true);
-
-
-        editAction = (ImageView) findViewById(R.id.editAction);
-        openNav = (ImageView) findViewById(R.id.openNav);
-
+        myToolbar = (Toolbar) findViewById(R.id.showProfileToolbar);
+        setSupportActionBar(myToolbar);
+        myToolbar.setNavigationIcon(R.drawable.ic_action_open_nav);
 
         setUpDrawer();
-
-
-
-
-        editAction.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                editUser();
-            }
-        });
-
-
-
 
     }
 
@@ -161,14 +134,12 @@ public class MainActivity extends AppCompatActivity {
         NavigationDrawerFragment drawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.nav_drawer_fragment);
         final DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
         drawerFragment.setUpDrawer(R.id.nav_drawer_fragment,drawerLayout, myToolbar);
-
-        openNav.setOnClickListener(new View.OnClickListener() {
+        myToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 drawerLayout.openDrawer(Gravity.LEFT);
             }
         });
-
     }
 
 
@@ -209,8 +180,6 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
-
-
     }
 
 
@@ -232,8 +201,6 @@ public class MainActivity extends AppCompatActivity {
                 textBio.setText(bio);
                 photoUser.setImageBitmap(photo);
 
-
-
             }
         }
 
@@ -247,4 +214,23 @@ public class MainActivity extends AppCompatActivity {
         return BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.toolbar_menu_showprofile,menu);
+        return true ;
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch(item.getItemId()){
+            case R.id.editProfileItem :
+                editUser();
+                break ;
+        }
+        return true ;
+
+
+    }
 }
