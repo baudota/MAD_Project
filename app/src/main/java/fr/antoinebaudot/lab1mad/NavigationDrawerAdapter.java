@@ -53,16 +53,20 @@ public  class NavigationDrawerAdapter extends RecyclerView.Adapter<NavigationDra
             @Override
             public void onClick(View view) {
 
-                Intent intent ;
+                Intent intent;
 
                 if (holder.title.getText().toString().equals(context.getResources().getString(R.string.menuProfile))) {
                     intent = new Intent(context, MainActivity.class);
                     context.startActivity(intent);
                     ((Activity) context).finish();
                 } else if (holder.title.getText().toString().equals(context.getResources().getString(R.string.menuUserBooks))) {
-                    intent = new Intent(context,UserBooks.class);
+                    intent = new Intent(context, UserBooks.class);
                     context.startActivity(intent);
-                    ((Activity)context).finish();
+                    ((Activity) context).finish();
+                } else if (holder.title.getText().toString().equals(context.getResources().getString(R.string.searchbooks))) {
+                    intent = new Intent(context,SearchBooks.class);
+                    context.startActivity(intent);
+                    ((Activity) context).finish();
                 } else if (holder.title.getText().toString().equals(context.getResources().getString(R.string.menuLeave))){
                     FirebaseAuth.getInstance().signOut();
                     intent = new Intent(context,LoginActivity.class);

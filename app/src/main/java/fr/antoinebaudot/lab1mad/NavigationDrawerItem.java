@@ -50,6 +50,7 @@ public class NavigationDrawerItem {
         return new int[]{
                 R.drawable.ic_person_black_24dp,
                 R.drawable.icon_book,
+                R.drawable.ic_searchbooks,
                 R.drawable.icon_disconnect
         };
     }
@@ -59,6 +60,7 @@ public class NavigationDrawerItem {
         return new int[] {
                 R.string.menuProfile,
                 R.string.menuUserBooks,
+                R.string.searchbooks,
                 R.string.menuLeave
         };
     }

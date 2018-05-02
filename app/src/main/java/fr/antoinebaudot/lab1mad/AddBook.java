@@ -81,10 +81,12 @@ public class AddBook extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String isbn = isbnEditText.getText().toString();
+
                 Log.i("isbn written", isbn);
                 String surl = "https://www.googleapis.com/books/v1/volumes?q=isbn:" + isbn;
                 jsonIsbn = new DownloadTask(AddBook.this);
                 jsonIsbn.execute(surl);
+                isbnEditText.setText(isbn);
             }
         });
 
@@ -291,9 +293,9 @@ public class AddBook extends AppCompatActivity {
         bookMap.put("owner",user.getUid());
 
 
-
-        booksRef.child(isbn + "-" + user.getUid()).setValue(bookMap);
-
+        if (!isbn.equals("")) {
+            booksRef.child(isbn + "-" + user.getUid()).setValue(bookMap);
+        }
 
         Intent intent = new Intent(AddBook.this, UserBooks.class);
         startActivity(intent);

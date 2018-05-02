@@ -23,6 +23,7 @@
     <string name="barcode">Scan the bar code</string>
     <string name="clear">Clear all</string>
     <string name="findByIsbn">Find by ISBN</string>
+    <string name="searchbooks">Search books</string>
 
 
 </resources>
