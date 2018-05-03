@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
+import android.widget.ListView;
 
 public class ListActivity extends AppCompatActivity {
 
@@ -21,14 +22,17 @@ public class ListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_list);
-        int size = 40;
-        dataSet = new String[size];
-        for (int i = 0; i < size; i++) {
-            dataSet[i] = "Data number " + i;
-        }
+        setContentView(R.layout.activity_search_books);
 
+        Bundle b = getIntent().getExtras();
+        String [] tst = b.getStringArray("key");
+        System.out.println("tst = " + tst.length);
+        dataSet = tst;
+
+        assert dataSet != null;
+        System.out.println("dataSet = " + dataSet.length);
         mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
+
 
         mRecyclerView.setHasFixedSize(true);
         int marginBottom = 40;
