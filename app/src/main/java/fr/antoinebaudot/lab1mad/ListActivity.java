@@ -9,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 import android.widget.ListView;
 
@@ -51,6 +52,12 @@ public class ListActivity extends AppCompatActivity {
 
         mAdapter = new Adapter(getApplicationContext(), dataSet);
         mRecyclerView.setAdapter(mAdapter);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.toolbar_menu_searchbooks , menu);
+        return true ;
     }
 
 

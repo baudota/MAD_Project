@@ -10,10 +10,9 @@
     android:paddingRight="@dimen/activity_horizontal_margin">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/my_recycler_view"
+        android:id="@+id/old"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:scrollbars="vertical" />
-
 </LinearLayout>

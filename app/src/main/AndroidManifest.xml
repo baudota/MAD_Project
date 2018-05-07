@@ -35,7 +35,9 @@
         <activity android:name=".SignUpActivity" />
         <activity android:name=".UserBooks" />
         <activity android:name=".AddBook" />
-        <activity android:name=".SearchBooks"></activity>
+        <activity android:name=".SearchBooks" />
+        <activity android:name=".ListActivity" />
+        <activity android:name=".displaySearchResult"></activity>
     </application>
 
 </manifest>

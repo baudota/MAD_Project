@@ -17,8 +17,31 @@
 
         <include layout="@layout/toolbar"
             android:id="@+id/myToolbar"/>
+        <android.support.v7.widget.AppCompatSpinner
+            android:id="@+id/spin"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:spinnerMode="dropdown">
+        </android.support.v7.widget.AppCompatSpinner>
+        <android.support.design.widget.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:id="@+id/editTextKeyword"
+            android:layout_weight="1"/>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="6">
 
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/my_recycler_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:scrollbars="vertical" />
+        </LinearLayout>
 
     </LinearLayout>
 

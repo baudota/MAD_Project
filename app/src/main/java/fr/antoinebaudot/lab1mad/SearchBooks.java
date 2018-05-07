@@ -11,6 +11,7 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -74,9 +75,10 @@ public class SearchBooks extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.toolbar_menu_searchbooks ,menu);
+        getMenuInflater().inflate(R.menu.toolbar_menu_searchbooks , menu);
         return true ;
     }
+
 
 
     @Override
@@ -115,6 +117,7 @@ public class SearchBooks extends AppCompatActivity {
 
                             b.putStringArray("key",lstString);
                             intent.putExtras(b);
+
                             startActivity(intent);
                             finish();
 
@@ -122,6 +125,7 @@ public class SearchBooks extends AppCompatActivity {
 
                         }
                         }
+
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
