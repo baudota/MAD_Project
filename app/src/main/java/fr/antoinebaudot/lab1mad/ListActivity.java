@@ -41,13 +41,13 @@ public class ListActivity extends AppCompatActivity {
         mRecyclerView.addItemDecoration(new ItemOffsetDecoration(marginBottom, marginRight,this));
 
         //The purpose of these lines is to know the number of column to display
-        DisplayMetrics metrics = new DisplayMetrics();
+       /* DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
         int nbColumn = (int) metrics.xdpi / 120;
         Integer nbC = nbColumn;
         String nbCs = nbC.toString();
-        Log.i("Columns", nbCs);
-        mLayoutManager = new GridLayoutManager(this, nbColumn);
+        Log.i("Columns", nbCs);*/
+        mLayoutManager = new GridLayoutManager(this, 1);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         mAdapter = new Adapter(getApplicationContext(), dataSet);
