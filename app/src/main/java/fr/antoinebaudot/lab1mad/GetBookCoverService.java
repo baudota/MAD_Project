@@ -57,6 +57,7 @@ public class GetBookCoverService extends IntentService {
             Log.i("SERVICE","COVER GET IN SERVICE");
             Bundle resBitmap = new Bundle();
             resBitmap.putByteArray("COVER_BYTE_ARRAY",byteArray);
+            resBitmap.putString("COVER_URL",imageLink);
             result.send(0,resBitmap);
 
         } catch (MalformedURLException e) {

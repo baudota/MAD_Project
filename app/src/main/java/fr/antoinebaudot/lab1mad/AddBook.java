@@ -57,6 +57,8 @@ public class AddBook extends AppCompatActivity {
     private EditText titleEditText ;
     private EditText subtitleEditText ;
     private EditText descriptionEditText ;
+    private String coverURL = null ;
+    private String isbn ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,13 +93,13 @@ public class AddBook extends AppCompatActivity {
         btnIsbn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String isbn = isbnEditText.getText().toString();
+                isbn = isbnEditText.getText().toString();
 
                 Log.i("isbn written", isbn);
                 String surl = "https://www.googleapis.com/books/v1/volumes?q=isbn:" + isbn;
                 jsonIsbn = new DownloadTask(AddBook.this);
                 jsonIsbn.execute(surl);
-                isbnEditText.setText(isbn);
+                //isbnEditText.setText(isbn);
             }
         });
 
@@ -161,6 +163,7 @@ public class AddBook extends AppCompatActivity {
     protected void setParameters(String json) {
         clear();
         jsonIsbn.cancel(true);
+        isbnEditText.setText(isbn);
         setAuthor(json);
         setTitle(json);
         setSubtitle(json);
@@ -282,6 +285,7 @@ public class AddBook extends AppCompatActivity {
         bookCover.setImageBitmap(cover);
         bookCover.setVisibility(View.VISIBLE);
         Log.i("COVER","COVER SET");
+
     }
 
    /* private void setDefaultCover() {
@@ -319,20 +323,20 @@ public class AddBook extends AppCompatActivity {
 
         switch(item.getItemId()){
             case R.id.saveProfileItem :
-                saveBook();
+                String isbn = isbnEditText.getText().toString();
+                String title = titleEditText.getText().toString();
+                String subtitle = subtitleEditText.getText().toString();
+                String author = authorEditText.getText().toString();
+                String description = descriptionEditText.getText().toString();
+                saveBook(isbn,title,subtitle,author,description);
                 break ;
         }
         return true ;
 
     }
 
-    private void saveBook(){
+    private void saveBook(String isbn,String title,String subtitle,String author,String description){
 
-        String isbn = isbnEditText.getText().toString();
-        String title = titleEditText.getText().toString();
-        String subtitle = subtitleEditText.getText().toString();
-        String author = authorEditText.getText().toString();
-        String description = descriptionEditText.getText().toString();
 
         DatabaseReference booksRef = mDatabase.child("books");
         FirebaseUser user = mAuth.getCurrentUser();
@@ -344,9 +348,12 @@ public class AddBook extends AppCompatActivity {
         bookMap.put("subtitle",subtitle);
         bookMap.put("description",description);
         bookMap.put("owner",user.getUid());
+        bookMap.put("cover",coverURL);
 
+        Log.i("BOOKMAP","ISBN : " + isbn);
 
         if (!isbn.equals("")) {
+            isbnEditText.setText(isbn);
             booksRef.child(isbn + "-" + user.getUid()).setValue(bookMap);
         }
 
@@ -367,7 +374,7 @@ public class AddBook extends AppCompatActivity {
         protected void onReceiveResult(int resultCode, Bundle resultData) {
             byte[] bytesImg = resultData.getByteArray("COVER_BYTE_ARRAY");
             Bitmap thumbnail = BitmapFactory.decodeByteArray(bytesImg,0,bytesImg.length);
-
+            coverURL = resultData.getString("COVER_URL");
 
             //Bitmap receivedCover = (Bitmap) resultData.get("COVER_BITMAP");
             setCover(thumbnail);
