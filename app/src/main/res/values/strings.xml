@@ -26,6 +26,8 @@
     <string name="searchbooks">Search books</string>
     <string name="title_activity_result_of_search_books">ResultOfSearchBooks</string>
     <string name="title_activity_new_result">newResult</string>
+    <string name="chat">Chats</string>
+    <string name="send">SEND</string>
 
 
 </resources>

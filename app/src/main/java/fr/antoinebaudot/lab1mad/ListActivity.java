@@ -30,8 +30,7 @@ public class ListActivity extends AppCompatActivity {
         System.out.println("tst = " + tst.length);
         dataSet = tst;
 
-        assert dataSet != null;
-        System.out.println("dataSet = " + dataSet.length);
+
         mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
 
 

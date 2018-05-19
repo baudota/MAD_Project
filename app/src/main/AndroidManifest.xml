@@ -37,7 +37,9 @@
         <activity android:name=".AddBook" />
         <activity android:name=".SearchBooks" />
         <activity android:name=".ListActivity" />
-        <activity android:name=".displaySearchResult"></activity>
+        <activity android:name=".displaySearchResult" />
+        <activity android:name=".ChatMessengerActivity" />
+        <activity android:name=".ChatActivity" />
     </application>
 
 </manifest>
