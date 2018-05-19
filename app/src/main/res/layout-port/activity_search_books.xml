@@ -24,8 +24,12 @@
             <android.support.v7.widget.AppCompatSpinner
                 android:id="@+id/spin"
                 android:layout_width="match_parent"
+                android:paddingRight="16dp"
+                android:paddingLeft="16dp"
+                android:background="@color/colorPrimary"
                 android:layout_height="0dp"
                 android:layout_weight="1"
+
                 android:spinnerMode="dropdown">
             </android.support.v7.widget.AppCompatSpinner>
 
@@ -34,9 +38,25 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:id="@+id/editTextKeyword"
+                android:paddingRight="16dp"
+                android:paddingLeft="16dp"
+                android:background="@color/colorPrimary"
+                android:textColor="@android:color/white"
                 android:layout_weight="1"/>
 
-            <LinearLayout
+
+            <ProgressBar
+                android:id="@+id/pb"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="6"
+                android:layout_margin="100dp"
+                android:visibility="gone"
+                style="@android:style/Widget.Holo.ProgressBar.Large"
+                android:indeterminate="true"
+                />
+
+            <LinearLayout android:id="@+id/results"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="6"

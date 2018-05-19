@@ -8,8 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
-    private String[] mDataset;
+    private ArrayList<Book> mDataset;
     private LayoutInflater inflater;
 
     // Provide a reference to the views for each data item
@@ -23,7 +25,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
         }
     }
 
-    public Adapter(Context context, String[] myDataset) {
+    public Adapter(Context context, ArrayList<Book> myDataset) {
         mDataset = myDataset;
         inflater = LayoutInflater.from(context);
     }
@@ -40,14 +42,16 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
     // Replace the contents of the view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.mTextView.setText(mDataset[position]);
+        Book tmp = mDataset.get(position);
+        holder.mTextView.setText(tmp.getTitle());
+       // holder.mTextView.setText(mDataset.get(position));
 
     }
 
     // Return the size of the dataset
     @Override
     public int getItemCount() {
-        return mDataset.length;
+        return mDataset.size();
     }
 }
 

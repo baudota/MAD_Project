@@ -2,6 +2,7 @@ package fr.antoinebaudot.lab1mad;
 
 import android.content.Context;
 import android.graphics.Rect;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -12,6 +13,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ListView;
+
+import java.util.ArrayList;
 
 public class ListActivity extends AppCompatActivity {
 
@@ -25,20 +28,20 @@ public class ListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_books);
 
-        Bundle b = getIntent().getExtras();
-        String [] tst = b.getStringArray("key");
-        System.out.println("tst = " + tst.length);
-        dataSet = tst;
 
-        assert dataSet != null;
-        System.out.println("dataSet = " + dataSet.length);
+        ArrayList<Book> tst = getIntent().getParcelableArrayListExtra("BOOKS");
+        //System.out.println("tst = " + tst.size());
+
+
+        assert tst != null;
+        System.out.println("dataSet = " + tst.size());
         mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
 
 
         mRecyclerView.setHasFixedSize(true);
         int marginBottom = 40;
         int marginRight = 20;
-        mRecyclerView.addItemDecoration(new ItemOffsetDecoration(marginBottom, marginRight,this));
+       // mRecyclerView.addItemDecoration(new ItemOffsetDecoration(marginBottom, marginRight,this));
 
         //The purpose of these lines is to know the number of column to display
        /* DisplayMetrics metrics = new DisplayMetrics();
@@ -50,7 +53,7 @@ public class ListActivity extends AppCompatActivity {
         mLayoutManager = new GridLayoutManager(this, 1);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        mAdapter = new Adapter(getApplicationContext(), dataSet);
+        mAdapter = new Adapter(getApplicationContext(), tst);
         mRecyclerView.setAdapter(mAdapter);
     }
 
@@ -61,7 +64,7 @@ public class ListActivity extends AppCompatActivity {
     }
 
 
-    private class ItemOffsetDecoration extends RecyclerView.ItemDecoration {
+    /*private class ItemOffsetDecoration extends RecyclerView.ItemDecoration {
         private int itemMarginTop;
         private int ItemMarginRight;
         private Context context;
@@ -86,6 +89,6 @@ public class ListActivity extends AppCompatActivity {
                 }
             }
         }
-    }
+    }*/
 }
 
