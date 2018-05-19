@@ -17,7 +17,7 @@
 
 
         <!-- Try to find a nice flat icon of a book to put here -->
-        <ImageView
+        <ImageView  android:id="@+id/bookCover"
             android:layout_width="match_parent"
             android:layout_height="100dp" />
 
