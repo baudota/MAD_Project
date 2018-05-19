@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -24,6 +26,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
 
+import static android.view.View.GONE;
+
 public class LoginActivity extends AppCompatActivity {
 
     private EditText loginMailEditText ;
@@ -32,6 +36,8 @@ public class LoginActivity extends AppCompatActivity {
     private Button signUpButton ;
     private FirebaseAuth mAuth ;
     private String email, password ;
+    private ProgressBar pB ;
+    private TextView title ;
 
 
     @Override
@@ -44,6 +50,8 @@ public class LoginActivity extends AppCompatActivity {
         passwdEdittext = (EditText) findViewById(R.id.loginPassword);
         loginButton = (Button) findViewById(R.id.loginBtn);
         signUpButton = (Button) findViewById(R.id.signUpBtn);
+        pB = (ProgressBar) findViewById(R.id.pb);
+        title = (TextView) findViewById(R.id.appName);
 
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
 
@@ -68,6 +76,12 @@ public class LoginActivity extends AppCompatActivity {
                 email = loginMailEditText.getText().toString();
                 password = passwdEdittext.getText().toString();
 
+                pB.setVisibility(View.VISIBLE);
+                loginMailEditText.setVisibility(GONE);
+                passwdEdittext.setVisibility(GONE);
+                loginButton.setVisibility(GONE);
+                signUpButton.setVisibility(GONE);
+
                 if (email.equals("") || password.equals("")) {
                     Toast.makeText(LoginActivity.this,getResources().getString(R.string.missingInformations),Toast.LENGTH_LONG).show();
                 } else {
@@ -87,11 +101,11 @@ public class LoginActivity extends AppCompatActivity {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        /*if (currentUser != null) {
+        if (currentUser != null) {
             Intent intent = new Intent(LoginActivity.this,MainActivity.class);
             startActivity(intent);
             finish();
-        }*/
+        }
     }
 
 
@@ -100,6 +114,8 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
+
+                    pB.setVisibility(GONE);
                     // Sign in success, update UI with the signed-in user's information
                     FirebaseUser user = mAuth.getCurrentUser();
                     String userUID = user.getUid();
@@ -110,6 +126,11 @@ public class LoginActivity extends AppCompatActivity {
                     finish();
 
                 } else {
+                    pB.setVisibility(View.GONE);
+                    loginMailEditText.setVisibility(View.VISIBLE);
+                    passwdEdittext.setVisibility(View.VISIBLE);
+                    loginButton.setVisibility(View.VISIBLE);
+                    signUpButton.setVisibility(View.VISIBLE);
                     Toast.makeText(LoginActivity.this, getResources().getString(R.string.authFailed), Toast.LENGTH_SHORT).show();
                 }
 

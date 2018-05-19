@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:background="@color/colorPrimary">
 
-    <TextView
+    <TextView   android:id="@+id/appName"
         android:layout_width="match_parent"
         android:layout_height="120dp"
         android:textSize="40sp"
@@ -15,6 +15,15 @@
         android:gravity="center"
         android:textStyle="italic"
         android:fontFamily="serif"/>
+
+    <ProgressBar
+        android:id="@+id/pb"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:visibility="gone"
+        style="@android:style/Widget.Holo.ProgressBar.Large"
+        android:indeterminate="true"
+        />
 
 
 

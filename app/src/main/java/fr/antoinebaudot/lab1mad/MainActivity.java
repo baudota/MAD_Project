@@ -20,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.support.v4.app.FragmentActivity;
@@ -50,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
     private Context context = this ;
     private Bitmap photo = null ;
     private DatabaseReference mDatabase;
+    private ProgressBar pB ;
 
 
     @Override
@@ -77,7 +79,10 @@ public class MainActivity extends AppCompatActivity {
         textMail = (TextView) findViewById(R.id.textMail);
         textBio = (TextView) findViewById(R.id.textBio);
         photoUser = (ImageView) findViewById(R.id.photoUser);
+        pB = (ProgressBar)findViewById(R.id.pb);
 
+        photoUser.setVisibility(View.GONE);
+        pB.setVisibility(View.VISIBLE);
 
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -97,6 +102,8 @@ public class MainActivity extends AppCompatActivity {
                     textMail.setText(mail);
                     textBio.setText(bio);
                     photoUser.setImageBitmap(photo);
+                    photoUser.setVisibility(View.VISIBLE);
+                    pB.setVisibility(View.GONE);
                 }
 
                 @Override

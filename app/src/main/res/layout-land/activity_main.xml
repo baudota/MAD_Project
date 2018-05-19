@@ -45,8 +45,16 @@
             android:src="@drawable/ic_person_black_24dp"
             android:layout_gravity="center"
            android:layout_margin="5dp"/>
-
-
+        <ProgressBar
+            android:id="@+id/pb"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:visibility="gone"
+            style="@android:style/Widget.Holo.ProgressBar.Large"
+            android:indeterminate="true"
+            />
 
     </LinearLayout>
 
@@ -71,6 +79,12 @@
             android:textColor="@color/colorPrimaryDark"
             />
 
+        <View
+            android:layout_width="300dp"
+            android:layout_height="1dp"
+            android:background="@color/colorPrimaryDark"
+            android:layout_gravity="center"/>
+
         <TextView   android:id="@+id/textMail"
             android:layout_width="match_parent"
             android:textSize="20sp"
@@ -79,6 +93,12 @@
             android:layout_marginRight="16dp"
             android:layout_marginLeft="16dp"
             android:textColor="@color/colorPrimaryDark"/>
+
+        <View
+            android:layout_width="300dp"
+            android:layout_height="1dp"
+            android:background="@color/colorPrimaryDark"
+            android:layout_gravity="center"/>
 
         <TextView   android:id="@+id/textBio"
             android:layout_width="match_parent"
