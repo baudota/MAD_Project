@@ -4,7 +4,10 @@ package fr.antoinebaudot.lab1mad;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.ResultReceiver;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -15,8 +18,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.support.v7.widget.Toolbar;
 
 import com.google.android.gms.vision.Frame;
@@ -27,6 +28,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -46,6 +48,8 @@ public class AddBook extends AppCompatActivity {
     private EditText titleEditText ;
     private EditText subtitleEditText ;
     private EditText descriptionEditText ;
+    private String coverURL = null ;
+    private String isbn ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,13 +84,13 @@ public class AddBook extends AppCompatActivity {
         btnIsbn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String isbn = isbnEditText.getText().toString();
+                isbn = isbnEditText.getText().toString();
 
                 Log.i("isbn written", isbn);
                 String surl = "https://www.googleapis.com/books/v1/volumes?q=isbn:" + isbn;
                 jsonIsbn = new DownloadTask(AddBook.this);
                 jsonIsbn.execute(surl);
-                isbnEditText.setText(isbn);
+                //isbnEditText.setText(isbn);
             }
         });
 
@@ -150,10 +154,12 @@ public class AddBook extends AppCompatActivity {
     protected void setParameters(String json) {
         clear();
         jsonIsbn.cancel(true);
+        isbnEditText.setText(isbn);
         setAuthor(json);
         setTitle(json);
         setSubtitle(json);
         setDescription(json);
+        getImage(json);
     }
 
     private void setAuthor(String json) {
@@ -236,6 +242,48 @@ public class AddBook extends AppCompatActivity {
         }
     }
 
+
+
+    private void getImage(String json)  {
+
+        String imageLink = new String("");
+        URL coverURL ;
+
+        try {
+            int indexImageLink = json.indexOf("smallThumbnail");
+            int endIndexImageLink = json.indexOf(",",indexImageLink);
+            //Integer indexF = endIndexImageLink;
+            //Integer indexD = indexImageLink;
+            imageLink = json.substring(indexImageLink+18,endIndexImageLink-1);
+
+            CoverReceiver myCoverReceiver = new CoverReceiver(new Handler());
+
+            Intent service = new Intent(AddBook.this,GetBookCoverService.class);
+            service.putExtra("COVER_LINK",imageLink);
+
+            service.putExtra("COVER_RECEIVER",myCoverReceiver);
+            Log.i("MAIN","STARTING SERVICE");
+            startService(service);
+
+        } catch (IndexOutOfBoundsException e ) {
+            Log.i("imageLink","NO IMAGE LINK IN JSON FILE");
+           // setDefaultCover();
+        }
+    }
+
+    private void setCover(Bitmap cover) {
+        ImageView bookCover = (ImageView) findViewById(R.id.image_bar);
+        bookCover.setImageBitmap(cover);
+        bookCover.setVisibility(View.VISIBLE);
+        Log.i("COVER","COVER SET");
+
+    }
+
+   /* private void setDefaultCover() {
+        ImageView bookCover = (ImageView) findViewById(R.id.image_bar);
+        bookCover.setImageResource(R.drawable.icon_book);
+    }*/
+
     private void clear() {
         isbnEditText.setText("");
         authorEditText.setText("");
@@ -266,20 +314,20 @@ public class AddBook extends AppCompatActivity {
 
         switch(item.getItemId()){
             case R.id.saveProfileItem :
-                saveBook();
+                String isbn = isbnEditText.getText().toString();
+                String title = titleEditText.getText().toString();
+                String subtitle = subtitleEditText.getText().toString();
+                String author = authorEditText.getText().toString();
+                String description = descriptionEditText.getText().toString();
+                saveBook(isbn,title,subtitle,author,description);
                 break ;
         }
         return true ;
 
     }
 
-    private void saveBook(){
+    private void saveBook(String isbn,String title,String subtitle,String author,String description){
 
-        String isbn = isbnEditText.getText().toString();
-        String title = titleEditText.getText().toString();
-        String subtitle = subtitleEditText.getText().toString();
-        String author = authorEditText.getText().toString();
-        String description = descriptionEditText.getText().toString();
 
         DatabaseReference booksRef = mDatabase.child("books");
         FirebaseUser user = mAuth.getCurrentUser();
@@ -291,17 +339,37 @@ public class AddBook extends AppCompatActivity {
         bookMap.put("subtitle",subtitle);
         bookMap.put("description",description);
         bookMap.put("owner",user.getUid());
+        bookMap.put("cover",coverURL);
 
+        Log.i("BOOKMAP","ISBN : " + isbn);
 
         if (!isbn.equals("")) {
+            isbnEditText.setText(isbn);
             booksRef.child(isbn + "-" + user.getUid()).setValue(bookMap);
         }
 
-        Intent intent = new Intent(AddBook.this, UserBooks.class);
+        Intent intent = new Intent(AddBook.this, UserBooksActivity.class);
         startActivity(intent);
         finish();
 
 
+    }
+
+    public class CoverReceiver extends ResultReceiver  {
+
+        public CoverReceiver(Handler handler) {
+            super(handler);
+        }
+
+        @Override
+        protected void onReceiveResult(int resultCode, Bundle resultData) {
+            byte[] bytesImg = resultData.getByteArray("COVER_BYTE_ARRAY");
+            Bitmap thumbnail = BitmapFactory.decodeByteArray(bytesImg,0,bytesImg.length);
+            coverURL = resultData.getString("COVER_URL");
+
+            //Bitmap receivedCover = (Bitmap) resultData.get("COVER_BITMAP");
+            setCover(thumbnail);
+        }
     }
 
 

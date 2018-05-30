@@ -1,10 +1,13 @@
 package fr.antoinebaudot.lab1mad;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by s254741 on 06/04/2018.
  */
 
-public class User {
+public class User  {
     private String name ;
     private String email ;
     private String shortBio ;
@@ -27,4 +30,6 @@ public class User {
     public String getProfilePicture() {
         return profilePicture;
     }
+
+
 }

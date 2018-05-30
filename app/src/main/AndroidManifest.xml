@@ -33,13 +33,13 @@
             </intent-filter>
         </activity>
         <activity android:name=".SignUpActivity" />
-        <activity android:name=".UserBooks" />
+        <activity android:name=".UserBooksActivity" />
         <activity android:name=".AddBook" />
         <activity android:name=".SearchBooks" />
         <activity android:name=".ListActivity" />
-        <activity android:name=".displaySearchResult" />
-        <activity android:name=".ChatMessengerActivity" />
-        <activity android:name=".ChatActivity" />
+        <activity android:name=".chat.ChatRecordActivity" />
+        <activity android:name=".chat.ChatMessengerActivity" />
+        <activity android:name=".BookActivity"></activity>
     </application>
 
 </manifest>

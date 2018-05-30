@@ -17,6 +17,23 @@
         <include layout="@layout/toolbar"
             android:id="@+id/userBooksToolbar"/>
 
+
+        <LinearLayout android:id="@+id/results"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="6"
+            android:layout_marginRight="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="10dp">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/user_book_recycleView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scrollbars="vertical" />
+        </LinearLayout>
+
+
     </LinearLayout>
 
 

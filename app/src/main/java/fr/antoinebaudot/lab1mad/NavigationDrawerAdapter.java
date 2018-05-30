@@ -16,6 +16,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import java.util.Collections;
 import java.util.List;
 
+import fr.antoinebaudot.lab1mad.chat.ChatRecordActivity;
+
 /**
  * Created by Antoine on 18/04/2018.
  */
@@ -56,7 +58,7 @@ public  class NavigationDrawerAdapter extends RecyclerView.Adapter<NavigationDra
                     context.startActivity(intent);
                     ((Activity) context).finish();
                 } else if (holder.title.getText().toString().equals(context.getResources().getString(R.string.menuUserBooks))) {
-                    intent = new Intent(context, UserBooks.class);
+                    intent = new Intent(context, UserBooksActivity.class);
                     context.startActivity(intent);
                     ((Activity) context).finish();
                 } else if (holder.title.getText().toString().equals(context.getResources().getString(R.string.searchbooks))) {
@@ -73,7 +75,7 @@ public  class NavigationDrawerAdapter extends RecyclerView.Adapter<NavigationDra
 
                 else if(holder.title.getText().toString().equals(context.getResources().getString(R.string.chat))) {
                     FirebaseAuth.getInstance().getUid();
-                    intent = new Intent(context, ChatActivity.class);
+                    intent = new Intent(context, ChatRecordActivity.class);
                     context.startActivity(intent);
                 }
 

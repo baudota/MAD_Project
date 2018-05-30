@@ -28,6 +28,8 @@
     <string name="title_activity_new_result">newResult</string>
     <string name="chat">Chats</string>
     <string name="send">SEND</string>
+    <string name="textview">TextView</string>
+    <string name="chat_history_text_view_content">tmp</string>
 
 
 </resources>
