@@ -19,6 +19,12 @@ import kotlinx.android.synthetic.main.my_text_view.view.*
 
 class ChatAdapter(val userLst : ArrayList<User>) : RecyclerView.Adapter<CustomViewHolder>() {
 
+
+    override fun onBindViewHolder(holder: CustomViewHolder, position: Int) {
+        val user = userLst.get(position)
+        holder.view.chat_text_view?.text = user.name
+    }
+
     // Create new views (invoked by the layout manager)
     override fun onCreateViewHolder(parent: ViewGroup,
                                     viewType: Int): CustomViewHolder {
@@ -33,13 +39,6 @@ class ChatAdapter(val userLst : ArrayList<User>) : RecyclerView.Adapter<CustomVi
     // Return the size of your dataset (invoked by the layout manager)
     override fun getItemCount() = userLst.size
 
-    override fun onBindViewHolder(holder: CustomViewHolder?, position: Int) {
-        //holder?.view?.chat_text_view =
-        val user = userLst.get(position)
-        holder?.view?.chat_text_view?.text = user.name
-
-        //set the attributes of icon and so on
-    }
 
 
 }
@@ -52,7 +51,8 @@ class CustomViewHolder(val userLst : ArrayList<User>,val  view : View) : Recycle
         for (user in userLst) {
             if (user.name == name){
                 view.setBackgroundColor(Color.GRAY)
-
+                val reference = FirebaseDatabase.getInstance().reference
+                //reference.child("users").child()
                 val intent = Intent(view.context , ChatMessengerActivity::class.java)
                 intent.putExtra("Activity","ChatRecordActivity")
                 intent.putExtra("user",user.email)
