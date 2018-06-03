@@ -17,7 +17,39 @@
         <include layout="@layout/toolbar"
             android:id="@+id/userBooksToolbar"/>
 
+
+        <ProgressBar
+            android:id="@+id/pb"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="20dp"
+            android:visibility="gone"
+            style="@android:style/Widget.Holo.ProgressBar.Large"
+            android:indeterminate="true"
+            />
+
+
+        <LinearLayout android:id="@+id/results"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="6"
+            android:layout_marginRight="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="10dp">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/my_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scrollbars="vertical" />
+        </LinearLayout>
+
     </LinearLayout>
+
+
+
 
 
     <fragment

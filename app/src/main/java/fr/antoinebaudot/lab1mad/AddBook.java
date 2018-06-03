@@ -336,10 +336,11 @@ public class AddBook extends AppCompatActivity {
     }
 
     private void saveBook(String isbn,String title,String subtitle,String author,String description){
+        FirebaseUser user = mAuth.getCurrentUser();
 
 
         DatabaseReference booksRef = mDatabase.child("books");
-        FirebaseUser user = mAuth.getCurrentUser();
+        DatabaseReference userBooksRef = mDatabase.child("users").child(user.getUid()).child("books");
 
         Map<String, String> bookMap = new HashMap<>();
         bookMap.put("isbn", isbn);
@@ -355,6 +356,7 @@ public class AddBook extends AppCompatActivity {
         if (!isbn.equals("")) {
             isbnEditText.setText(isbn);
             booksRef.child(isbn + "-" + user.getUid()).setValue(bookMap);
+            userBooksRef.push().setValue(isbn+"-"+user.getUid());
         }
 
         Intent intent = new Intent(AddBook.this, UserBooks.class);

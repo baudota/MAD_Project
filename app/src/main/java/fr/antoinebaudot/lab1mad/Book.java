@@ -17,6 +17,7 @@ public class Book implements Parcelable {
     private String description ;
     private String coverUrl ;
 
+    public Book(){};
 
     public Book(String uid, String isbn, String author, String title, String subtitle, String description, String coverUrl) {
         this.uid = uid;
