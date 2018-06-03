@@ -1,12 +1,18 @@
 package fr.antoinebaudot.lab1mad;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Handler;
+import android.os.ResultReceiver;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -87,6 +93,8 @@ public class BookInfo extends AppCompatActivity {
         authorTv.setText(bk.getAuthor());
         descriptionTv.setText(bk.getDescription());
 
+        getCover();
+
 
     }
 
@@ -108,11 +116,57 @@ public class BookInfo extends AppCompatActivity {
                 break ;
 
             default :
-                break ; 
+                break ;
         }
         return true ;
 
 
+    }
+
+
+    private  void getCover(){
+
+        try {
+
+            BookInfo.CoverReceiver myCoverReceiver = new BookInfo.CoverReceiver(new Handler());
+
+            Intent service = new Intent(BookInfo.this, GetBookCoverService.class);
+            service.putExtra("COVER_LINK", bk.getCoverUrl());
+
+            service.putExtra("COVER_RECEIVER", myCoverReceiver);
+            Log.i("MAIN", "STARTING SERVICE");
+            startService(service);
+
+        } catch (Exception e) {
+            findViewById(R.id.cover).setVisibility(View.GONE);
+        }
+    }
+
+    private void setCover(Bitmap cover) {
+        ImageView bookCover = (ImageView) findViewById(R.id.cover);
+        bookCover.setImageBitmap(cover);
+        bookCover.setVisibility(View.VISIBLE);
+        //Log.i("COVER","COVER SET");
+
+    }
+
+
+
+    public class CoverReceiver extends ResultReceiver {
+
+        public CoverReceiver(Handler handler) {
+            super(handler);
+        }
+
+        @Override
+        protected void onReceiveResult(int resultCode, Bundle resultData) {
+            byte[] bytesImg = resultData.getByteArray("COVER_BYTE_ARRAY");
+            Bitmap thumbnail = BitmapFactory.decodeByteArray(bytesImg,0,bytesImg.length);
+           // coverURL = resultData.getString("COVER_URL");
+
+            //Bitmap receivedCover = (Bitmap) resultData.get("COVER_BITMAP");
+            setCover(thumbnail);
+        }
     }
 
 }
