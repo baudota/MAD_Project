@@ -141,14 +141,14 @@ public class SearchBooks extends AppCompatActivity {
                                 System.out.println(information);
                                 //lst.add(information);
 
-                                //Book bk = issue.getValue(Book.class);
-                                Book bk = new Book(null, issue.child("isbn").getValue().toString(),
+                                Book bk = issue.getValue(Book.class);
+                                /*Book bk = new Book(null, issue.child("isbn").getValue().toString(),
                                         issue.child("author").getValue().toString(),
                                         issue.child("title").getValue().toString(),
                                         issue.child("subtitle").getValue().toString(),
                                         issue.child("description").getValue().toString(),
                                         "" );
-
+*/
                                 System.out.println(bk.getTitle() + "  " + bk.getIsbn());
 
                                 lst.add(bk);

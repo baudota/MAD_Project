@@ -23,8 +23,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-
-        <service android:name=".GetBookCoverService"/>
+        <service android:name=".GetBookCoverService" />
 
         <activity android:name=".MainActivity" />
         <activity android:name=".EditProfile" />
@@ -40,7 +39,8 @@
         <activity android:name=".AddBook" />
         <activity android:name=".SearchBooks" />
         <activity android:name=".ListActivity" />
-        <activity android:name=".displaySearchResult"/>
+        <activity android:name=".displaySearchResult" />
+        <activity android:name=".BookInfo"></activity>
     </application>
 
 </manifest>

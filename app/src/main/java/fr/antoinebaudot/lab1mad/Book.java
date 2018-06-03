@@ -9,7 +9,7 @@ import android.os.Parcelable;
 
 public class Book implements Parcelable {
 
-    private  String uid ;
+    private  String owner ;
     private String isbn ;
     private String author ;
     private String title ;
@@ -17,10 +17,11 @@ public class Book implements Parcelable {
     private String description ;
     private String coverUrl ;
 
+
     public Book(){};
 
-    public Book(String uid, String isbn, String author, String title, String subtitle, String description, String coverUrl) {
-        this.uid = uid;
+    public Book(String owner, String isbn, String author, String title, String subtitle, String description, String coverUrl) {
+        this.owner = owner;
         this.isbn = isbn;
         this.author = author;
         this.title = title;
@@ -34,13 +35,14 @@ public class Book implements Parcelable {
 
         in.readStringArray(data);
         // the order needs to be the same as in writeToParcel() method
-        this.uid = data[0];
+        this.owner = data[0];
         this.isbn = data[1];
         this.author = data[2];
         this.title = data[3];
         this.subtitle = data[4];
         this.description = data[5];
         this.coverUrl = data[6];
+
     }
 
 
@@ -52,7 +54,7 @@ public class Book implements Parcelable {
     @Override
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeStringArray(new String[]{
-                this.uid,
+                this.owner,
                 this.isbn,
                 this.author,
                 this.title,
@@ -74,8 +76,8 @@ public class Book implements Parcelable {
         }
     };
 
-    public String getUid() {
-        return uid;
+    public String getOwner() {
+        return owner;
     }
 
     public String getIsbn() {
@@ -100,5 +102,33 @@ public class Book implements Parcelable {
 
     public String getCoverUrl() {
         return coverUrl;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
+
+    public void setIsbn(String isbn) {
+        this.isbn = isbn;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setSubtitle(String subtitle) {
+        this.subtitle = subtitle;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setCoverUrl(String coverUrl) {
+        this.coverUrl = coverUrl;
     }
 }
