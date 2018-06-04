@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -31,7 +32,7 @@ public class BookInfo extends AppCompatActivity {
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
     private Book bk ;
-
+    private String bookId ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +51,7 @@ public class BookInfo extends AppCompatActivity {
         });
 
         Intent intent = getIntent() ;
-        String bookId = intent.getStringExtra("BOOK_ID");
+        bookId = intent.getStringExtra("BOOK_ID");
 
 
         mAuth = FirebaseAuth.getInstance();
@@ -76,6 +77,19 @@ public class BookInfo extends AppCompatActivity {
         });
 
 
+        Button sendReq = (Button) findViewById(R.id.sendRequest);
+        sendReq.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                FirebaseUser user = mAuth.getCurrentUser();
+
+                Intent intent = new Intent(BookInfo.this,SendRequest.class);
+                intent.putExtra("BOOK_ID",bookId);
+                intent.putExtra("USER_ID",user.getUid());
+                startActivity(intent);
+            }
+        });
 
 
     }
