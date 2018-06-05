@@ -11,6 +11,7 @@ import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.text.Layout;
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,10 +28,12 @@ import com.google.firebase.database.ValueEventListener;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class RequestsListAdapter extends RecyclerView.Adapter<RequestsListAdapter.ViewHolder> {
-    private ArrayList<BookRequest> mDataset;
+    private ArrayList<Pair<String,BookRequest>> mDataset;
     private LayoutInflater inflater;
+    //private ArrayList<String> keys ;
 
     // Provide a reference to the views for each data item
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -39,6 +42,7 @@ public class RequestsListAdapter extends RecyclerView.Adapter<RequestsListAdapte
         private TextView start;
         private TextView end ;
         private TextView state ;
+        private TextView key ;
 
         public ViewHolder(final View itemView) {
             super(itemView);
@@ -46,40 +50,8 @@ public class RequestsListAdapter extends RecyclerView.Adapter<RequestsListAdapte
             start = (TextView) itemView.findViewById(R.id.startDate);
             end = (TextView) itemView.findViewById(R.id.endDate);
             state = (TextView) itemView.findViewById(R.id.state);
+            key = (TextView) itemView.findViewById(R.id.dbkey);
 
-
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(final View view) {
-
-                    if (state.getText().toString().equals(RequestState.SENT.toString())){
-                        final PopupMenu changeState = new PopupMenu(itemView.getContext(),itemView);
-                        changeState.inflate(R.menu.changestate_menu);
-
-                        changeState.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                            @Override
-                            public boolean onMenuItemClick(MenuItem item) {
-
-                                switch (item.getItemId()){
-                                    case R.id.accept:
-                                        view.setBackgroundColor(view.getContext().getResources().getColor(R.color.accepted));
-                                        break;
-                                    case R.id.refuse:
-                                        view.setBackgroundColor(view.getContext().getResources().getColor(R.color.refused));
-                                        break ;
-                                }
-
-
-                                return false;
-                            }
-                        });
-
-
-                        changeState.show();
-
-                    }
-                }
-            });
 
 
         }
@@ -87,9 +59,12 @@ public class RequestsListAdapter extends RecyclerView.Adapter<RequestsListAdapte
 
     }
 
-    public RequestsListAdapter(Context context, ArrayList<BookRequest> myDataset) {
+
+
+    public RequestsListAdapter(Context context, ArrayList<Pair<String,BookRequest>> myDataset) {
         mDataset = myDataset;
         inflater = LayoutInflater.from(context);
+
     }
 
     // Create new views
@@ -104,12 +79,22 @@ public class RequestsListAdapter extends RecyclerView.Adapter<RequestsListAdapte
     // Replace the contents of the view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        BookRequest tmp = mDataset.get(position);
+
+
+        BookRequest tmp = mDataset.get(position).second;
+        String key = mDataset.get(position).first;
 
         holder.start.setText(tmp.getStart());
         holder.end.setText(tmp.getEnd());
         holder.book.setText(tmp.getTitle());
         holder.state.setText(tmp.getState().toString());
+        holder.key.setText(key);
+
+        if(tmp.getState().toString().equals(RequestState.ACCEPTED.toString())){
+            holder.itemView.setBackgroundColor(holder.itemView.getContext().getResources().getColor(R.color.accepted));
+        } else if (tmp.getState().toString().equals(RequestState.REFUSED.toString())){
+            holder.itemView.setBackgroundColor(holder.itemView.getContext().getResources().getColor(R.color.refused));
+        }
 
     }
 
@@ -120,6 +105,9 @@ public class RequestsListAdapter extends RecyclerView.Adapter<RequestsListAdapte
     }
 
 
+    public interface OnItemClickListener {
+        void onItemClick(View view, RequestState newState);
+    }
 
 
 

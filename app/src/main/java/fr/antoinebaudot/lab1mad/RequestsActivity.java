@@ -7,9 +7,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Pair;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -24,11 +26,15 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import static android.view.View.GONE;
 
-public class RequestsActivity extends AppCompatActivity {
+public class RequestsActivity extends AppCompatActivity implements RequestsListAdapter.OnItemClickListener {
 
     private RecyclerView mRecyclerView ;
     private RecyclerView.Adapter mAdapter ;
@@ -67,50 +73,61 @@ public class RequestsActivity extends AppCompatActivity {
 
         displaySentRequests();
 
+        mRecyclerView.addOnItemTouchListener(new RecyclerItemClickListener(RequestsActivity.this, mRecyclerView, new RecyclerItemClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(final View view, int position) {
+                TextView state = (TextView) view.findViewById(R.id.state);
 
 
+                if (state.getText().toString().equals(RequestState.SENT.toString()) &&  filterInfo.getText().toString().equals(getResources().getString(R.string.recvReq))){
+                    final PopupMenu changeState = new PopupMenu(view.getContext(),view);
+                    changeState.inflate(R.menu.changestate_menu);
+
+                    changeState.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            DatabaseReference ref ;
+                            TextView keyTv;
+                            String key;
+                            switch (item.getItemId()){
+                                case R.id.accept:
+                                   // view.setBackgroundColor(getResources().getColor(R.color.accepted));
+                                    keyTv = (TextView) view.findViewById(R.id.dbkey);
+                                    key = keyTv.getText().toString();
+                                    ref = mDatabase.getRoot().child("requests").child(key).child("state");
+                                    ref.setValue(RequestState.ACCEPTED.toString());
+                                    displayReceivedRequests();
+                                    break;
+                                case R.id.refuse:
+                                   // view.setBackgroundColor(getResources().getColor(R.color.refused));
+                                    keyTv = (TextView) view.findViewById(R.id.dbkey);
+                                    key = keyTv.getText().toString();
+                                    ref = mDatabase.getRoot().child("requests").child(key).child("state");
+                                    ref.setValue(RequestState.REFUSED.toString());
+                                    displayReceivedRequests();
+                                    break ;
+                            }
 
 
+                            return false;
+                        }
+                    });
+
+
+                    changeState.show();
+
+                }
+            }
+
+            @Override
+            public void onLongItemClick(View view, int position) {
+
+            }
+        }));
 
 
     }
-
-   /* private void displayRequests() {
-        final ArrayList<BookRequest> requests = new ArrayList<>();
-
-        filterInfo.setText("All");
-
-        DatabaseReference ref = mDatabase.child("requests");
-
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()){
-                    BookRequest bk ;
-                    for(DataSnapshot tmp : dataSnapshot.getChildren()){
-
-                        bk = tmp.getValue(BookRequest.class);
-                        requests.add(bk);
-
-
-                    }
-
-
-                }
-
-                mAdapter = new RequestsListAdapter(RequestsActivity.this,requests);
-                mRecyclerView.setAdapter(mAdapter);
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-
-    }*/
 
 
 
@@ -122,13 +139,14 @@ public class RequestsActivity extends AppCompatActivity {
         FirebaseUser user = mAuth.getCurrentUser();
         String userId = user.getUid();
 
-        filterInfo.setText("Sent Requests");
+        filterInfo.setText(getResources().getString(R.string.sentReq));
 
         Query query = mDatabase.getRoot().child("requests").orderByChild("userId").equalTo(userId);
 
         query.addListenerForSingleValueEvent(new ValueEventListener() {
 
-            ArrayList<BookRequest> sentRequests = new ArrayList<>();
+            //HashMap<String,BookRequest> sentRequests = new HashMap<>();
+            ArrayList<Pair<String,BookRequest>> sentRequests = new ArrayList<>();
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -137,7 +155,7 @@ public class RequestsActivity extends AppCompatActivity {
 
                     for (DataSnapshot dt : dataSnapshot.getChildren()){
 
-                        sentRequests.add(dt.getValue(BookRequest.class));
+                        sentRequests.add(new Pair<String, BookRequest>(dt.getKey(),dt.getValue(BookRequest.class)));
 
                     }
 
@@ -164,13 +182,13 @@ public class RequestsActivity extends AppCompatActivity {
         myPb.setVisibility(View.VISIBLE);
         mRecyclerView.setVisibility(GONE);
 
-        filterInfo.setText("Received Requests");
+        filterInfo.setText(getResources().getString(R.string.recvReq));
 
         Query query = mDatabase.getRoot().child("requests").orderByChild("ownerId").equalTo(userId);
 
         query.addListenerForSingleValueEvent(new ValueEventListener() {
 
-            ArrayList<BookRequest> sentRequests = new ArrayList<>();
+            ArrayList<Pair<String,BookRequest>> recvRequests = new ArrayList<>();
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -179,13 +197,13 @@ public class RequestsActivity extends AppCompatActivity {
 
                     for (DataSnapshot dt : dataSnapshot.getChildren()){
 
-                        sentRequests.add(dt.getValue(BookRequest.class));
+                        recvRequests.add(new Pair<String, BookRequest>(dt.getKey(),dt.getValue(BookRequest.class)));
 
                     }
 
                 }
                 myPb.setVisibility(View.GONE);
-                mAdapter = new RequestsListAdapter(RequestsActivity.this,sentRequests);
+                mAdapter = new RequestsListAdapter(RequestsActivity.this,recvRequests);
                 mRecyclerView.setAdapter(mAdapter);
                 mRecyclerView.setVisibility(View.VISIBLE);
             }
@@ -199,6 +217,8 @@ public class RequestsActivity extends AppCompatActivity {
     }
 
 
+
+
     private void setUpDrawer() {
         NavigationDrawerFragment drawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.nav_drawer_fragment);
         final DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
@@ -209,6 +229,8 @@ public class RequestsActivity extends AppCompatActivity {
                 drawerLayout.openDrawer(Gravity.LEFT);
             }
         });
+
+
     }
 
 
@@ -260,4 +282,8 @@ public class RequestsActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onItemClick(View view,RequestState newState) {
+        view.setBackgroundColor(getResources().getColor(R.color.accepted));
+    }
 }
