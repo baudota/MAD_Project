@@ -10,8 +10,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.nio.BufferUnderflowException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SendRequest extends AppCompatActivity  implements MyDatePickerFragment.DialogData{
 
@@ -23,11 +29,14 @@ public class SendRequest extends AppCompatActivity  implements MyDatePickerFragm
     private Button defEnd ;
     final int START = 0 ;
     final int END = 1 ;
+    private DatabaseReference mDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_send_request);
+
+        mDatabase = FirebaseDatabase.getInstance().getReference().getRoot();
 
         myToolbar = (Toolbar) findViewById(R.id.myToolbar);
         setSupportActionBar(myToolbar);
@@ -59,6 +68,14 @@ public class SendRequest extends AppCompatActivity  implements MyDatePickerFragm
             }
         });
 
+
+        send.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sendRequest();
+            }
+        });
+
     }
 
 
@@ -85,20 +102,26 @@ public class SendRequest extends AppCompatActivity  implements MyDatePickerFragm
 
 
     public void sendRequest(){
-        BookRequest bkReq = new BookRequest();
 
         String bookId = getIntent().getStringExtra("BOOK_ID");
         String userId = getIntent().getStringExtra("USER_ID");
-        bkReq.setBookId(bookId);
-        bkReq.setStart(start.getText().toString());
-        bkReq.setEnd(end.getText().toString());
-
         String ownerId = bookId.split("-")[1];
-        bkReq.setOwnerID(ownerId);
 
-        bkReq.setUserID(userId);
+        String key = FirebaseDatabase.getInstance().getReference("requests").push().getKey();
+        DatabaseReference ref = mDatabase.child("requests").child(key);
 
-        //SEND TO THE DATABASE
+        Map<String, String> bookReq = new HashMap<>();
+        bookReq.put("state",RequestState.SENT.toString());
+        bookReq.put("ownerId",ownerId);
+        bookReq.put("userId",userId);
+        bookReq.put("start",start.getText().toString());
+        bookReq.put("end",end.getText().toString());
+        bookReq.put("bookId",bookId);
+
+        ref.setValue(bookReq);
+        Toast.makeText(SendRequest.this,"Request sent!",Toast.LENGTH_SHORT).show();
+        finish();
+
 
     }
 

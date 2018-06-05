@@ -72,6 +72,10 @@ public  class NavigationDrawerAdapter extends RecyclerView.Adapter<NavigationDra
                     intent = new Intent(context,LoginActivity.class);
                     context.startActivity(intent);
                     ((Activity)context).finish();
+                } else if (holder.title.getText().toString().equals(context.getResources().getString(R.string.requests))){
+                    intent = new Intent(context,RequestsActivity.class);
+                    context.startActivity(intent);
+                    ((Activity)context).finish();
                 }
 
             }

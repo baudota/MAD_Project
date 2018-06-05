@@ -40,6 +40,30 @@ public class BookRequest {
         this.userID = userID;
     }
 
+    public RequestState getState() {
+        return state;
+    }
+
+    public String getOwnerID() {
+        return ownerID;
+    }
+
+    public String getUserID() {
+        return userID;
+    }
+
+    public String getStart() {
+        return start;
+    }
+
+    public String getEnd() {
+        return end;
+    }
+
+    public String getBookId() {
+        return bookId;
+    }
+
     public void setStart(String start) {
         this.start = start;
     }
