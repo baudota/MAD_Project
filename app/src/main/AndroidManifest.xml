@@ -40,7 +40,9 @@
         <activity android:name=".SearchBooks" />
         <activity android:name=".ListActivity" />
         <activity android:name=".displaySearchResult" />
-        <activity android:name=".BookInfo"></activity>
+        <activity android:name=".BookInfo" />
+        <activity android:name=".RequestsActivity" />
+        <activity android:name=".SendRequest"></activity>
     </application>
 
 </manifest>

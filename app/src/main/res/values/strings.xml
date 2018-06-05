@@ -26,6 +26,9 @@
     <string name="searchbooks">Search books</string>
     <string name="title_activity_result_of_search_books">ResultOfSearchBooks</string>
     <string name="title_activity_new_result">newResult</string>
+    <string name="requests">Book Requests</string>
+    <string name="sentReq">Sent Requests</string>
+    <string name="recvReq">Received Requests</string>
 
 
 </resources>

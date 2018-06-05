@@ -11,6 +11,7 @@ import android.os.Parcelable;
 import android.os.ResultReceiver;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Base64;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.Menu;
@@ -31,6 +32,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -256,14 +258,14 @@ public class AddBook extends AppCompatActivity {
     private void getImage(String json)  {
 
         String imageLink = new String("");
-        URL coverURL ;
+       // URL coverURL ;
 
         try {
-            int indexImageLink = json.indexOf("smallThumbnail");
+            int indexImageLink = json.indexOf("thumbnail");
             int endIndexImageLink = json.indexOf(",",indexImageLink);
             //Integer indexF = endIndexImageLink;
             //Integer indexD = indexImageLink;
-            imageLink = json.substring(indexImageLink+18,endIndexImageLink-1);
+            imageLink = json.substring(indexImageLink+13,endIndexImageLink-1);
 
             CoverReceiver myCoverReceiver = new CoverReceiver(new Handler());
 
@@ -285,6 +287,8 @@ public class AddBook extends AppCompatActivity {
         bookCover.setImageBitmap(cover);
         bookCover.setVisibility(View.VISIBLE);
         Log.i("COVER","COVER SET");
+
+        coverURL = encodeToBase64(cover, Bitmap.CompressFormat.PNG,100);
 
     }
 
@@ -366,6 +370,14 @@ public class AddBook extends AppCompatActivity {
 
     }
 
+
+    public static String encodeToBase64(Bitmap image, Bitmap.CompressFormat compressFormat, int quality)
+    {
+        ByteArrayOutputStream byteArrayOS = new ByteArrayOutputStream();
+        image.compress(compressFormat, quality, byteArrayOS);
+        return Base64.encodeToString(byteArrayOS.toByteArray(), Base64.DEFAULT);
+    }
+
     public class CoverReceiver extends ResultReceiver  {
 
         public CoverReceiver(Handler handler) {
@@ -376,7 +388,7 @@ public class AddBook extends AppCompatActivity {
         protected void onReceiveResult(int resultCode, Bundle resultData) {
             byte[] bytesImg = resultData.getByteArray("COVER_BYTE_ARRAY");
             Bitmap thumbnail = BitmapFactory.decodeByteArray(bytesImg,0,bytesImg.length);
-            coverURL = resultData.getString("COVER_URL");
+           // coverURL = resultData.getString("COVER_URL");
 
             //Bitmap receivedCover = (Bitmap) resultData.get("COVER_BITMAP");
             setCover(thumbnail);

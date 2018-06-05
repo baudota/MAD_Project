@@ -8,10 +8,12 @@ import android.os.ResultReceiver;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -31,6 +33,12 @@ public class BookInfo extends AppCompatActivity {
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
     private Book bk ;
+    private String bookId ;
+    private TextView titleTv;
+    private TextView subtitleTv ;
+    private TextView authorTv ;
+    private TextView descriptionTv ;
+    private  ImageView cover ;
 
 
     @Override
@@ -50,7 +58,7 @@ public class BookInfo extends AppCompatActivity {
         });
 
         Intent intent = getIntent() ;
-        String bookId = intent.getStringExtra("BOOK_ID");
+        bookId = intent.getStringExtra("BOOK_ID");
 
 
         mAuth = FirebaseAuth.getInstance();
@@ -76,6 +84,20 @@ public class BookInfo extends AppCompatActivity {
         });
 
 
+        Button sendReq = (Button) findViewById(R.id.sendRequest);
+        sendReq.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                FirebaseUser user = mAuth.getCurrentUser();
+
+                Intent intent = new Intent(BookInfo.this,SendRequest.class);
+                intent.putExtra("BOOK_ID",bookId);
+                intent.putExtra("USER_ID",user.getUid());
+                intent.putExtra("TITLE",titleTv.getText().toString());
+                startActivity(intent);
+            }
+        });
 
 
     }
@@ -83,21 +105,30 @@ public class BookInfo extends AppCompatActivity {
 
     private void showBookInfo() {
 
-        TextView titleTv = (TextView) findViewById(R.id.title);
-        TextView subtitleTv = (TextView) findViewById(R.id.subtitle);
-        TextView authorTv = (TextView) findViewById(R.id.author);
-        TextView descriptionTv = (TextView) findViewById(R.id.description);
+        titleTv = (TextView) findViewById(R.id.title);
+        subtitleTv = (TextView) findViewById(R.id.subtitle);
+        authorTv = (TextView) findViewById(R.id.author);
+        descriptionTv = (TextView) findViewById(R.id.description);
+        cover = (ImageView) findViewById(R.id.cover);
+
 
         titleTv.setText(bk.getTitle());
         subtitleTv.setText(bk.getSubtitle());
         authorTv.setText(bk.getAuthor());
         descriptionTv.setText(bk.getDescription());
 
-        getCover();
+        Bitmap coverBp = decodeBase64(bk.getCover());
+        cover.setImageBitmap(coverBp);
+
 
 
     }
 
+    public static Bitmap decodeBase64(String input)
+    {
+        byte[] decodedBytes = Base64.decode(input, 0);
+        return BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
+    }
 
 
     @Override
@@ -124,49 +155,7 @@ public class BookInfo extends AppCompatActivity {
     }
 
 
-    private  void getCover(){
-
-        try {
-
-            BookInfo.CoverReceiver myCoverReceiver = new BookInfo.CoverReceiver(new Handler());
-
-            Intent service = new Intent(BookInfo.this, GetBookCoverService.class);
-            service.putExtra("COVER_LINK", bk.getCoverUrl());
-
-            service.putExtra("COVER_RECEIVER", myCoverReceiver);
-            Log.i("MAIN", "STARTING SERVICE");
-            startService(service);
-
-        } catch (Exception e) {
-            findViewById(R.id.cover).setVisibility(View.GONE);
-        }
-    }
-
-    private void setCover(Bitmap cover) {
-        ImageView bookCover = (ImageView) findViewById(R.id.cover);
-        bookCover.setImageBitmap(cover);
-        bookCover.setVisibility(View.VISIBLE);
-        //Log.i("COVER","COVER SET");
-
-    }
 
 
-
-    public class CoverReceiver extends ResultReceiver {
-
-        public CoverReceiver(Handler handler) {
-            super(handler);
-        }
-
-        @Override
-        protected void onReceiveResult(int resultCode, Bundle resultData) {
-            byte[] bytesImg = resultData.getByteArray("COVER_BYTE_ARRAY");
-            Bitmap thumbnail = BitmapFactory.decodeByteArray(bytesImg,0,bytesImg.length);
-           // coverURL = resultData.getString("COVER_URL");
-
-            //Bitmap receivedCover = (Bitmap) resultData.get("COVER_BITMAP");
-            setCover(thumbnail);
-        }
-    }
 
 }
