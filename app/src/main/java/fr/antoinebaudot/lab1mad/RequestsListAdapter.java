@@ -7,10 +7,12 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -38,12 +40,46 @@ public class RequestsListAdapter extends RecyclerView.Adapter<RequestsListAdapte
         private TextView end ;
         private TextView state ;
 
-        public ViewHolder(View itemView) {
+        public ViewHolder(final View itemView) {
             super(itemView);
             book = (TextView) itemView.findViewById(R.id.bookId);
             start = (TextView) itemView.findViewById(R.id.startDate);
             end = (TextView) itemView.findViewById(R.id.endDate);
             state = (TextView) itemView.findViewById(R.id.state);
+
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(final View view) {
+
+                    if (state.getText().toString().equals(RequestState.SENT.toString())){
+                        final PopupMenu changeState = new PopupMenu(itemView.getContext(),itemView);
+                        changeState.inflate(R.menu.changestate_menu);
+
+                        changeState.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                            @Override
+                            public boolean onMenuItemClick(MenuItem item) {
+
+                                switch (item.getItemId()){
+                                    case R.id.accept:
+                                        view.setBackgroundColor(view.getContext().getResources().getColor(R.color.accepted));
+                                        break;
+                                    case R.id.refuse:
+                                        view.setBackgroundColor(view.getContext().getResources().getColor(R.color.refused));
+                                        break ;
+                                }
+
+
+                                return false;
+                            }
+                        });
+
+
+                        changeState.show();
+
+                    }
+                }
+            });
 
 
         }

@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.os.ResultReceiver;
 import android.support.v7.widget.RecyclerView;
 import android.text.Layout;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -76,9 +77,27 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
         holder.mDescView.setText(tmp.getDescription());
         holder.bookId.setText(tmp.getIsbn() + "-" + tmp.getOwner());
 
-        
-       // holder.mTextView.setText(mDataset.get(position));
 
+        if (tmp.getCover() != null) {
+
+            Bitmap cover = decodeBase64(tmp.getCover());
+            holder.coverBook.setImageBitmap(cover);
+
+        } else {
+            holder.coverBook.setImageResource(R.drawable.icon_book);
+        }
+
+
+
+
+
+    }
+
+
+    public static Bitmap decodeBase64(String input)
+    {
+        byte[] decodedBytes = Base64.decode(input, 0);
+        return BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
     }
 
     // Return the size of the dataset

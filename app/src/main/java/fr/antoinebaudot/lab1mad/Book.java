@@ -15,7 +15,7 @@ public class Book implements Parcelable {
     private String title ;
     private String subtitle;
     private String description ;
-    private String coverUrl ;
+    private String cover ;
 
 
     public Book(){};
@@ -27,7 +27,7 @@ public class Book implements Parcelable {
         this.title = title;
         this.subtitle = subtitle;
         this.description = description;
-        this.coverUrl = coverUrl;
+        this.cover = coverUrl;
     }
 
     public Book(Parcel in){
@@ -41,7 +41,7 @@ public class Book implements Parcelable {
         this.title = data[3];
         this.subtitle = data[4];
         this.description = data[5];
-        this.coverUrl = data[6];
+        this.cover = data[6];
 
     }
 
@@ -60,7 +60,7 @@ public class Book implements Parcelable {
                 this.title,
                 this.subtitle,
                 this.description,
-                this.coverUrl
+                this.cover
         });
 
 
@@ -100,8 +100,8 @@ public class Book implements Parcelable {
         return description;
     }
 
-    public String getCoverUrl() {
-        return coverUrl;
+    public String getCover() {
+        return cover;
     }
 
     public void setOwner(String owner) {
@@ -128,7 +128,7 @@ public class Book implements Parcelable {
         this.description = description;
     }
 
-    public void setCoverUrl(String coverUrl) {
-        this.coverUrl = coverUrl;
+    public void setCover(String coverUrl) {
+        this.cover = coverUrl;
     }
 }
