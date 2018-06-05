@@ -33,6 +33,11 @@ public class BookInfo extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private Book bk ;
     private String bookId ;
+    private TextView titleTv;
+    private TextView subtitleTv ;
+    private TextView authorTv ;
+    private TextView descriptionTv ;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +92,7 @@ public class BookInfo extends AppCompatActivity {
                 Intent intent = new Intent(BookInfo.this,SendRequest.class);
                 intent.putExtra("BOOK_ID",bookId);
                 intent.putExtra("USER_ID",user.getUid());
+                intent.putExtra("TITLE",titleTv.getText().toString());
                 startActivity(intent);
             }
         });
@@ -97,10 +103,10 @@ public class BookInfo extends AppCompatActivity {
 
     private void showBookInfo() {
 
-        TextView titleTv = (TextView) findViewById(R.id.title);
-        TextView subtitleTv = (TextView) findViewById(R.id.subtitle);
-        TextView authorTv = (TextView) findViewById(R.id.author);
-        TextView descriptionTv = (TextView) findViewById(R.id.description);
+        titleTv = (TextView) findViewById(R.id.title);
+        subtitleTv = (TextView) findViewById(R.id.subtitle);
+        authorTv = (TextView) findViewById(R.id.author);
+        descriptionTv = (TextView) findViewById(R.id.description);
 
         titleTv.setText(bk.getTitle());
         subtitleTv.setText(bk.getSubtitle());

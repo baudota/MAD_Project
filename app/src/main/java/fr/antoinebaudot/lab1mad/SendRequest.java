@@ -105,6 +105,7 @@ public class SendRequest extends AppCompatActivity  implements MyDatePickerFragm
 
         String bookId = getIntent().getStringExtra("BOOK_ID");
         String userId = getIntent().getStringExtra("USER_ID");
+        String title = getIntent().getStringExtra("TITLE");
         String ownerId = bookId.split("-")[1];
 
         String key = FirebaseDatabase.getInstance().getReference("requests").push().getKey();
@@ -117,6 +118,7 @@ public class SendRequest extends AppCompatActivity  implements MyDatePickerFragm
         bookReq.put("start",start.getText().toString());
         bookReq.put("end",end.getText().toString());
         bookReq.put("bookId",bookId);
+        bookReq.put("title",title);
 
         ref.setValue(bookReq);
         Toast.makeText(SendRequest.this,"Request sent!",Toast.LENGTH_SHORT).show();

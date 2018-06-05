@@ -14,18 +14,20 @@ public class BookRequest {
     private String start ;
     private String end ;
     private String bookId ;
+    private String title ;
 
     public BookRequest() {
         this.state = RequestState.SENT;
     }
 
-    public BookRequest(RequestState state, String ownerID, String userID, String start, String end, String bookId) {
+    public BookRequest(RequestState state, String ownerID, String userID, String start, String end, String bookId, String title) {
         this.state = state;
         this.ownerID = ownerID;
         this.userID = userID;
         this.start = start;
         this.end = end;
         this.bookId = bookId;
+        this.title =title;
     }
 
     public void setState(RequestState state) {
@@ -40,7 +42,16 @@ public class BookRequest {
         this.userID = userID;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     public RequestState getState() {
+
         return state;
     }
 

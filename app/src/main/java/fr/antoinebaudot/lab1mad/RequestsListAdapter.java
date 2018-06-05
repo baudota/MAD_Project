@@ -16,6 +16,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
@@ -63,9 +69,10 @@ public class RequestsListAdapter extends RecyclerView.Adapter<RequestsListAdapte
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         BookRequest tmp = mDataset.get(position);
-        holder.book.setText(tmp.getBookId());
+
         holder.start.setText(tmp.getStart());
         holder.end.setText(tmp.getEnd());
+        holder.book.setText(tmp.getTitle());
         holder.state.setText(tmp.getState().toString());
 
     }
