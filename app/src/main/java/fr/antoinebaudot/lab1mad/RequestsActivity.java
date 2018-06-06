@@ -1,5 +1,7 @@
 package fr.antoinebaudot.lab1mad;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -28,7 +31,12 @@ import com.google.firebase.database.ValueEventListener;
 
 import org.w3c.dom.Text;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -75,7 +83,7 @@ public class RequestsActivity extends AppCompatActivity implements RequestsListA
 
         mRecyclerView.addOnItemTouchListener(new RecyclerItemClickListener(RequestsActivity.this, mRecyclerView, new RecyclerItemClickListener.OnItemClickListener() {
             @Override
-            public void onItemClick(final View view, int position) {
+            public void onItemClick(final View view, int position)  {
                 TextView state = (TextView) view.findViewById(R.id.state);
 
 
@@ -92,7 +100,6 @@ public class RequestsActivity extends AppCompatActivity implements RequestsListA
                             String key;
                             switch (item.getItemId()){
                                 case R.id.accept:
-                                   // view.setBackgroundColor(getResources().getColor(R.color.accepted));
                                     keyTv = (TextView) view.findViewById(R.id.dbkey);
                                     key = keyTv.getText().toString();
                                     ref = mDatabase.getRoot().child("requests").child(key).child("state");
@@ -100,7 +107,6 @@ public class RequestsActivity extends AppCompatActivity implements RequestsListA
                                     displayReceivedRequests();
                                     break;
                                 case R.id.refuse:
-                                   // view.setBackgroundColor(getResources().getColor(R.color.refused));
                                     keyTv = (TextView) view.findViewById(R.id.dbkey);
                                     key = keyTv.getText().toString();
                                     ref = mDatabase.getRoot().child("requests").child(key).child("state");
@@ -118,6 +124,33 @@ public class RequestsActivity extends AppCompatActivity implements RequestsListA
                     changeState.show();
 
                 }
+
+
+                if (state.getText().toString().equals(RequestState.ACCEPTED.toString())){
+                    TextView endDateTv = (TextView) view.findViewById(R.id.endDate);
+                    String endDate = endDateTv.getText().toString() ;
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+
+                    Date end = null;
+                    try {
+                        end = sdf.parse(endDate);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    Date now = Calendar.getInstance().getTime() ;
+                    System.out.println(now.compareTo(end));
+                    if(now.compareTo(end) > 0){
+                        TextView keyTv = (TextView) view.findViewById(R.id.dbkey);
+                        String key = keyTv.getText().toString();
+                        if(filterInfo.getText().toString().equals(R.string.recvReq)){
+                            rateBorrower(key);
+                        } else {
+                            rateOwner(key);
+                        }
+                    }
+
+                }
+
             }
 
             @Override
@@ -127,6 +160,45 @@ public class RequestsActivity extends AppCompatActivity implements RequestsListA
         }));
 
 
+    }
+
+
+    private  void rateOwner(String reqKey){
+
+        DatabaseReference ref = mDatabase.getRoot().child("requests").child(reqKey).child("ownerId");
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String ownerId = dataSnapshot.getValue().toString();
+                Intent intent = new Intent(RequestsActivity.this,RatingActivity.class);
+                intent.putExtra("USER_ID",ownerId);
+                startActivity(intent);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+    private  void rateBorrower(String reqKey) {
+        DatabaseReference ref = mDatabase.getRoot().child("requests").child(reqKey).child("userId");
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String userId = dataSnapshot.getValue().toString();
+                Intent intent = new Intent(RequestsActivity.this,RatingActivity.class);
+                intent.putExtra("USER_ID",userId);
+                startActivity(intent);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
 

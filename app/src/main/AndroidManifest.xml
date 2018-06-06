@@ -39,10 +39,30 @@
         <activity android:name=".AddBook" />
         <activity android:name=".SearchBooks" />
         <activity android:name=".ListActivity" />
-        <activity android:name=".displaySearchResult" />
         <activity android:name=".BookInfo" />
         <activity android:name=".RequestsActivity" />
-        <activity android:name=".SendRequest"></activity>
+        <activity android:name=".SendRequest"/>
+        <activity android:name=".RatingActivity"/>
+
+
+        <service
+            android:name=".MyFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+
+
+        <service
+            android:name=".MyFirebaseInstanceIDService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+            </intent-filter>
+        </service>
+
+
+
+
     </application>
 
 </manifest>

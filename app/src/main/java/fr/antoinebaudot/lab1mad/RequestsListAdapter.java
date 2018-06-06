@@ -16,8 +16,10 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -43,6 +45,7 @@ public class RequestsListAdapter extends RecyclerView.Adapter<RequestsListAdapte
         private TextView end ;
         private TextView state ;
         private TextView key ;
+        private Button rate ;
 
         public ViewHolder(final View itemView) {
             super(itemView);
@@ -51,12 +54,8 @@ public class RequestsListAdapter extends RecyclerView.Adapter<RequestsListAdapte
             end = (TextView) itemView.findViewById(R.id.endDate);
             state = (TextView) itemView.findViewById(R.id.state);
             key = (TextView) itemView.findViewById(R.id.dbkey);
-
-
-
+            rate = (Button) itemView.findViewById(R.id.rateBtn);
         }
-
-
     }
 
 
@@ -90,11 +89,15 @@ public class RequestsListAdapter extends RecyclerView.Adapter<RequestsListAdapte
         holder.state.setText(tmp.getState().toString());
         holder.key.setText(key);
 
+
         if(tmp.getState().toString().equals(RequestState.ACCEPTED.toString())){
             holder.itemView.setBackgroundColor(holder.itemView.getContext().getResources().getColor(R.color.accepted));
         } else if (tmp.getState().toString().equals(RequestState.REFUSED.toString())){
             holder.itemView.setBackgroundColor(holder.itemView.getContext().getResources().getColor(R.color.refused));
         }
+
+
+
 
     }
 
