@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,7 +46,8 @@ public class RequestsListAdapter extends RecyclerView.Adapter<RequestsListAdapte
         private TextView end ;
         private TextView state ;
         private TextView key ;
-        private Button rate ;
+
+
 
         public ViewHolder(final View itemView) {
             super(itemView);
@@ -54,7 +56,8 @@ public class RequestsListAdapter extends RecyclerView.Adapter<RequestsListAdapte
             end = (TextView) itemView.findViewById(R.id.endDate);
             state = (TextView) itemView.findViewById(R.id.state);
             key = (TextView) itemView.findViewById(R.id.dbkey);
-            rate = (Button) itemView.findViewById(R.id.rateBtn);
+
+
         }
     }
 
@@ -95,7 +98,6 @@ public class RequestsListAdapter extends RecyclerView.Adapter<RequestsListAdapte
         } else if (tmp.getState().toString().equals(RequestState.REFUSED.toString())){
             holder.itemView.setBackgroundColor(holder.itemView.getContext().getResources().getColor(R.color.refused));
         }
-
 
 
 

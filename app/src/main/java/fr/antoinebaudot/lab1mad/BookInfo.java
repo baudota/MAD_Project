@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -39,6 +40,7 @@ public class BookInfo extends AppCompatActivity {
     private TextView authorTv ;
     private TextView descriptionTv ;
     private  ImageView cover ;
+    private RatingBar ratebar ;
 
 
     @Override
@@ -110,6 +112,8 @@ public class BookInfo extends AppCompatActivity {
         authorTv = (TextView) findViewById(R.id.author);
         descriptionTv = (TextView) findViewById(R.id.description);
         cover = (ImageView) findViewById(R.id.cover);
+        ratebar = (RatingBar) findViewById(R.id.ratebar);
+        final TextView undef = (TextView) findViewById(R.id.norate);
 
 
         titleTv.setText(bk.getTitle());
@@ -117,8 +121,43 @@ public class BookInfo extends AppCompatActivity {
         authorTv.setText(bk.getAuthor());
         descriptionTv.setText(bk.getDescription());
 
-        Bitmap coverBp = decodeBase64(bk.getCover());
-        cover.setImageBitmap(coverBp);
+        if (bk.getCover() != null) {
+            Bitmap coverBp = decodeBase64(bk.getCover());
+            cover.setImageBitmap(coverBp);
+        } else {
+            cover.setImageResource(R.drawable.icon_book);
+        }
+
+        String ownerId = bk.getOwner();
+        DatabaseReference ref = mDatabase.getRoot().child("rates").child(ownerId);
+
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()){
+                    float total = 0 ;
+                    float sum = 0 ;
+                    for (DataSnapshot dt : dataSnapshot.getChildren()) {
+                        sum = sum + Float.parseFloat(dt.getValue().toString());
+                        total++;
+                    }
+
+                    ratebar.setStepSize((float) 0.1);
+                    ratebar.setRating(sum/total);
+
+
+                } else {
+                    ratebar.setVisibility(View.GONE);
+                    undef.setVisibility(View.VISIBLE);
+
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
 
 
