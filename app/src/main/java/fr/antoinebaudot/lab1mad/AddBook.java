@@ -1,52 +1,55 @@
 package fr.antoinebaudot.lab1mad;
 
+        import android.content.Intent;
+        import android.graphics.Bitmap;
+        import android.graphics.BitmapFactory;
+        import android.graphics.Matrix;
+        import android.net.Uri;
+        import android.os.Bundle;
+        import android.os.Environment;
+        import android.os.Handler;
+        import android.os.ResultReceiver;
+        import android.provider.MediaStore;
+        import android.support.design.widget.TextInputEditText;
+        import android.support.design.widget.TextInputLayout;
+        import android.support.v4.content.FileProvider;
+        import android.support.v7.app.AppCompatActivity;
+        import android.support.v7.widget.Toolbar;
+        import android.util.Base64;
+        import android.util.Log;
+        import android.util.SparseArray;
+        import android.view.Menu;
+        import android.view.MenuItem;
+        import android.view.View;
+        import android.widget.Button;
+        import android.widget.EditText;
+        import android.widget.ImageView;
+        import android.widget.RelativeLayout;
+        import android.widget.TextView;
+
+        import com.google.android.gms.vision.Frame;
+        import com.google.android.gms.vision.barcode.Barcode;
+        import com.google.android.gms.vision.barcode.BarcodeDetector;
+        import com.google.firebase.auth.FirebaseAuth;
+        import com.google.firebase.auth.FirebaseUser;
+        import com.google.firebase.database.DatabaseReference;
+        import com.google.firebase.database.FirebaseDatabase;
+
+        import java.io.ByteArrayOutputStream;
+        import java.io.File;
+        import java.io.IOException;
+        import java.text.SimpleDateFormat;
+        import java.util.Date;
+        import java.util.HashMap;
+        import java.util.Map;
 
 
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Parcelable;
-import android.os.ResultReceiver;
-import android.provider.MediaStore;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Base64;
-import android.util.Log;
-import android.util.SparseArray;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.support.v7.widget.Toolbar;
-
-import com.google.android.gms.vision.Frame;
-import com.google.android.gms.vision.barcode.Barcode;
-import com.google.android.gms.vision.barcode.BarcodeDetector;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
-import static android.widget.TextView.BufferType.EDITABLE;
+        import static android.widget.TextView.BufferType.EDITABLE;
 
 public class AddBook extends AppCompatActivity {
+    static final int ORIENTATION_PORTRAIT = 1;
     static final int REQUEST_IMAGE_CAPTURE = 1;
+    static final int REQUEST_TAKE_PHOTO = 1;
     DownloadTask jsonIsbn;
     private Toolbar myToolbar ;
     private DatabaseReference mDatabase;
@@ -54,49 +57,50 @@ public class AddBook extends AppCompatActivity {
     private Button btnBarCode ;
     private Button btnIsbn;
     private Button btnClear;
-    private EditText isbnEditText ;
-    private EditText authorEditText ;
-    private EditText titleEditText ;
-    private EditText subtitleEditText ;
-    private EditText descriptionEditText ;
+    private TextInputEditText isbnEditText ;
+    private TextInputEditText authorEditText ;
+    private TextInputEditText titleEditText ;
+    private TextInputEditText subtitleEditText ;
+    private TextInputEditText descriptionEditText ;
     private String coverURL = null ;
     private String isbn ;
+    private String mCurrentPhotoPath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_addbook);
+        // recovering the instance state
+        if (savedInstanceState != null) {
+            mCurrentPhotoPath = savedInstanceState.getString("path");
+        }
 
-        isbnEditText = (EditText) findViewById(R.id.isbn);
-        authorEditText = (EditText) findViewById(R.id.authorId);
-        titleEditText = (EditText) findViewById(R.id.titleId);
-        subtitleEditText = (EditText) findViewById(R.id.subtitleId);
-        descriptionEditText = (EditText) findViewById(R.id.description);
+        setContentView(R.layout.activity_addbook);
         btnBarCode= (Button) findViewById(R.id.btn_bar);
         btnIsbn = (Button) findViewById(R.id.internet);
         btnClear = (Button) findViewById(R.id.clear);
-
+        isbnEditText = (TextInputEditText) findViewById(R.id.isbn);
+        authorEditText = (TextInputEditText) findViewById(R.id.authorId);
+        titleEditText = (TextInputEditText) findViewById(R.id.titleId);
+        subtitleEditText = (TextInputEditText) findViewById(R.id.subtitleId);
+        descriptionEditText = (TextInputEditText) findViewById(R.id.description);
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference().getRoot();
 
         myToolbar = findViewById(R.id.myToolbar);
         setSupportActionBar(myToolbar);
 
-
-      btnBarCode.setOnClickListener(new View.OnClickListener() {
-          @Override
-          public void onClick(View view) {
-              launchCamera();
-          }
-      });
-
+        btnBarCode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dispatchTakePictureIntent();
+            }
+        });
 
 
         btnIsbn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 isbn = isbnEditText.getText().toString();
-
                 Log.i("isbn written", isbn);
                 String surl = "https://www.googleapis.com/books/v1/volumes?q=isbn:" + isbn;
                 jsonIsbn = new DownloadTask(AddBook.this);
@@ -115,21 +119,55 @@ public class AddBook extends AppCompatActivity {
     }
 
 
-    private void launchCamera() {
+
+
+    private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                // Error occurred while creating the File
+                ex.printStackTrace();
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(this,
+                        "fr.antoinebaudot.lab1mad.fileprovider",
+                        photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+            }
         }
     }
+
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,
+                ".jpg",
+                storageDir
+        );
+        mCurrentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            ImageView img = (ImageView) findViewById(R.id.image_bar);
-            Bundle extras = data.getExtras();
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
-            img.setImageBitmap(imageBitmap);
-            decodeBarCode(imageBitmap);
+            Bitmap imageBitmap = BitmapFactory.decodeFile(mCurrentPhotoPath);
+            Matrix matrix = new Matrix();
+            matrix.postRotate(90);
+            Bitmap imageRotated = Bitmap.createBitmap(imageBitmap, 0, 0, imageBitmap.getWidth(), imageBitmap.getHeight(), matrix, true);
+            decodeBarCode(imageRotated);
         }
     }
 
@@ -139,9 +177,9 @@ public class AddBook extends AppCompatActivity {
                         .setBarcodeFormats(Barcode.EAN_13 | Barcode.EAN_8)
                         .build();
 
-
+        TextView text = (TextView) findViewById(R.id.isbn);
         if (!detector.isOperational()) {
-            isbnEditText.setText("Could not set up the detector!");
+            text.setText("Could not set up the detector!");
             return;
         }
 
@@ -152,13 +190,16 @@ public class AddBook extends AppCompatActivity {
         try {
             Barcode thisCode = barcodes.valueAt(0);
             String isbn = thisCode.rawValue;
-            isbnEditText.setText(isbn, EDITABLE);
+            text.setText(isbn, EDITABLE);
             String surl = "https://www.googleapis.com/books/v1/volumes?q=isbn:" + isbn;
             jsonIsbn = new DownloadTask(this);
             jsonIsbn.execute(surl);
         } catch (ArrayIndexOutOfBoundsException e) {
             clear();
-            isbnEditText.setText("No bar code detected");
+            text.setText("No bar code detected");
+        } finally {
+            File picture = new File(mCurrentPhotoPath);
+            Boolean deleted = picture.delete();
         }
     }
 
@@ -253,12 +294,19 @@ public class AddBook extends AppCompatActivity {
         }
     }
 
+    private void clear() {
+        isbnEditText.setText(null);
+        titleEditText.setText(null);
+        subtitleEditText.setText(null);
+        authorEditText.setText(null);
+        descriptionEditText.setText(null);
 
+    }
 
     private void getImage(String json)  {
 
         String imageLink = new String("");
-       // URL coverURL ;
+        // URL coverURL ;
 
         try {
             int indexImageLink = json.indexOf("thumbnail");
@@ -278,7 +326,7 @@ public class AddBook extends AppCompatActivity {
 
         } catch (IndexOutOfBoundsException e ) {
             Log.i("imageLink","NO IMAGE LINK IN JSON FILE");
-           // setDefaultCover();
+            // setDefaultCover();
         }
     }
 
@@ -291,29 +339,6 @@ public class AddBook extends AppCompatActivity {
         coverURL = encodeToBase64(cover, Bitmap.CompressFormat.PNG,100);
 
     }
-
-   /* private void setDefaultCover() {
-        ImageView bookCover = (ImageView) findViewById(R.id.image_bar);
-        bookCover.setImageResource(R.drawable.icon_book);
-    }*/
-
-    private void clear() {
-        isbnEditText.setText("");
-        authorEditText.setText("");
-        titleEditText.setText("");
-        subtitleEditText.setText("");
-        descriptionEditText.setText("");
-
-        /*RelativeLayout activityLayout = (RelativeLayout) findViewById(R.id.mainLayout);
-        int nbField = activityLayout.getChildCount();
-        for (int i = 0; i < nbField; i++) {
-            if (activityLayout.getChildAt(i) instanceof EditText) {
-                ((EditText) activityLayout.getChildAt(i)).setText(null);
-            }
-        }*/
-    }
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -378,7 +403,7 @@ public class AddBook extends AppCompatActivity {
         return Base64.encodeToString(byteArrayOS.toByteArray(), Base64.DEFAULT);
     }
 
-    public class CoverReceiver extends ResultReceiver  {
+    public class CoverReceiver extends ResultReceiver {
 
         public CoverReceiver(Handler handler) {
             super(handler);
@@ -388,12 +413,20 @@ public class AddBook extends AppCompatActivity {
         protected void onReceiveResult(int resultCode, Bundle resultData) {
             byte[] bytesImg = resultData.getByteArray("COVER_BYTE_ARRAY");
             Bitmap thumbnail = BitmapFactory.decodeByteArray(bytesImg,0,bytesImg.length);
-           // coverURL = resultData.getString("COVER_URL");
+            // coverURL = resultData.getString("COVER_URL");
 
             //Bitmap receivedCover = (Bitmap) resultData.get("COVER_BITMAP");
             setCover(thumbnail);
         }
     }
 
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putString("path", mCurrentPhotoPath);
+        super.onSaveInstanceState(outState);
+    }
+
 
 }
+
+
+
