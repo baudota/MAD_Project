@@ -5,10 +5,12 @@ import android.os.Bundle
 import android.support.v7.recyclerview.R.attr.layoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.Toolbar
 import android.text.Editable
 import android.text.Layout
 import android.text.TextWatcher
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
@@ -18,6 +20,7 @@ import com.google.firebase.database.*
 import fr.antoinebaudot.lab1mad.Book
 import fr.antoinebaudot.lab1mad.R
 import fr.antoinebaudot.lab1mad.R.id.messageRecyclerView
+import fr.antoinebaudot.lab1mad.R.id.showChatToolbar
 import fr.antoinebaudot.lab1mad.User
 import fr.antoinebaudot.lab1mad.chat.model.ChatLoader
 import fr.antoinebaudot.lab1mad.chat.model.Message
@@ -46,9 +49,18 @@ class ChatMessengerActivity : AppCompatActivity() {
     private lateinit var mFirebaseUser: FirebaseUser
     private lateinit var mFirebaseDatabaseReference: DatabaseReference;
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat_messenger)
+
+        val myToolbar = findViewById<Toolbar>(R.id.showChatToolbar);
+        setSupportActionBar(myToolbar);
+        myToolbar.navigationIcon = resources.getDrawable(R.drawable.ic_back_nav);
+        myToolbar?.setNavigationOnClickListener(View.OnClickListener {
+            finish();
+        });
+
 
         //When they write a message_view
         mFirebaseDatabaseReference = FirebaseDatabase.getInstance().reference.root
@@ -103,15 +115,15 @@ class ChatMessengerActivity : AppCompatActivity() {
 
             refChat?.addChildEventListener(object : ChildEventListener{
                 override fun onCancelled(p0: DatabaseError) {
-                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                    //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                 }
 
                 override fun onChildMoved(p0: DataSnapshot, p1: String?) {
-                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                    //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                 }
 
                 override fun onChildChanged(p0: DataSnapshot, p1: String?) {
-                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                    //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                 }
 
                 override fun onChildAdded(snap: DataSnapshot, p1: String?) {

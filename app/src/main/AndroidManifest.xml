@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="fr.antoinebaudot.lab1mad">
 
     <uses-feature
@@ -35,16 +36,15 @@
             </intent-filter>
         </activity>
         <activity android:name=".SignUpActivity" />
-        <activity android:name=".UserBooksActivity" />
+        <activity android:name=".UserBooks" />
         <activity android:name=".AddBook" />
         <activity android:name=".SearchBooks" />
         <activity android:name=".ListActivity" />
         <activity android:name=".chat.ChatRecordActivity" />
         <activity android:name=".chat.ChatMessengerActivity" />
-        <activity android:name=".BookActivity" />
         <activity android:name=".BookInfo" />
-        <activity android:name=".lending.lendingPage"></activity>
-        <activity android:name=".BookInfo" />
+        <!--<activity android:name=".lending.lendingPage"></activity>-->
+
         <activity android:name=".RequestsActivity" />
         <activity android:name=".SendRequest"/>
         <activity android:name=".RatingActivity"/>

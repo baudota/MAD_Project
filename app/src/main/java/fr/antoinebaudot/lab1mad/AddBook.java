@@ -388,8 +388,6 @@ public class AddBook extends AppCompatActivity {
             userBooksRef.push().setValue(isbn+"-"+user.getUid());
         }
 
-        Intent intent = new Intent(AddBook.this, UserBooksActivity.class);
-        startActivity(intent);
         finish();
 
 

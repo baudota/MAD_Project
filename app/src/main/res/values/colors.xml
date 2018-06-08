@@ -6,4 +6,5 @@
     <color name="photoBackground">#D8D8D8</color>
     <color name="accepted">#A9F5D0</color>
     <color name="refused">#F5A9A9</color>
+    <color name="colorMessage">#2874A6</color>
 </resources>
