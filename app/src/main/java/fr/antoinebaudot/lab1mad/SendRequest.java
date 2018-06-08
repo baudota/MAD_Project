@@ -140,6 +140,10 @@ public class SendRequest extends AppCompatActivity  implements MyDatePickerFragm
 
         switch(item.getItemId()){
 
+            case R.id.sendRequest:
+                //START A CHAT WITH THE BOOK OWNER
+                break;
+
             default :
                 break ;
         }

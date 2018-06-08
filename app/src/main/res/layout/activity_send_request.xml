@@ -5,21 +5,28 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="fr.antoinebaudot.lab1mad.SendRequest"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/photoBackground">
 
 
     <include layout="@layout/toolbar" android:id="@+id/myToolbar"/>
 
+
     <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp">
 
         <Button android:id="@+id/defineStart"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="define start"/>
+            android:text="define start"
+            android:background="@drawable/custom_button_login"
+            android:textColor="@android:color/white"/>
 
         <TextView   android:id="@+id/startDate"
             android:layout_width="0dp"
@@ -34,13 +41,18 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginRight="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="5dp">
 
         <Button android:id="@+id/defineEnd"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="define end"/>
+            android:text="define end"
+            android:background="@drawable/custom_button_login"
+            android:textColor="@android:color/white"/>
 
         <TextView android:id="@+id/endDate"
             android:layout_width="0dp"
@@ -54,9 +66,14 @@
 
 
     <Button android:id="@+id/send"
+        android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="SEND REQUEST"/>
+        android:text="SEND REQUEST"
+        android:background="@drawable/custom_button_login"
+        android:textColor="@android:color/white"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"/>
 
 
 
