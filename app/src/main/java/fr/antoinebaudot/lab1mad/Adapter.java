@@ -26,7 +26,8 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
     public static class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
         private TextView mTextView;
-        private  TextView mDescView;
+        private TextView mDescView;
+        private TextView bookId ;
         private ImageView coverBook ;
 
         public ViewHolder(View itemView) {
@@ -34,8 +35,23 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
             mTextView = (TextView) itemView.findViewById(R.id.text_item);
             mDescView = (TextView) itemView.findViewById(R.id.text_item_description);
             coverBook = (ImageView) itemView.findViewById(R.id.bookCover);
+            bookId = (TextView) itemView.findViewById(R.id.bookId);
+            
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    String id = bookId.getText().toString();
+                    Intent intent = new Intent(view.getContext(),BookInfo.class);
+
+
+                    intent.putExtra("BOOK_ID",id);
+                    view.getContext().startActivity(intent);
+                }
+            });
 
         }
+
+
     }
 
     public Adapter(Context context, ArrayList<Book> myDataset) {
@@ -58,6 +74,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
         Book tmp = mDataset.get(position);
         holder.mTextView.setText(tmp.getTitle());
         holder.mDescView.setText(tmp.getDescription());
+        holder.bookId.setText(tmp.getIsbn() + "-" + tmp.getOwner());
 
         holder.itemView.setOnClickListener(v ->
 

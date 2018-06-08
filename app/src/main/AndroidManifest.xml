@@ -23,6 +23,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        <service android:name=".GetBookCoverService" />
+
         <activity android:name=".MainActivity" />
         <activity android:name=".EditProfile" />
         <activity android:name=".LoginActivity">
@@ -39,7 +41,9 @@
         <activity android:name=".ListActivity" />
         <activity android:name=".chat.ChatRecordActivity" />
         <activity android:name=".chat.ChatMessengerActivity" />
-        <activity android:name=".BookActivity"></activity>
+        <activity android:name=".BookActivity" />
+        <activity android:name=".BookInfo" />
+        <activity android:name=".lending.lendingPage"></activity>
     </application>
 
 </manifest>

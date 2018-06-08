@@ -6,6 +6,7 @@ import android.support.v7.recyclerview.R.attr.layoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.text.Editable
+import android.text.Layout
 import android.text.TextWatcher
 import android.util.Log
 import android.widget.Button
@@ -18,25 +19,32 @@ import fr.antoinebaudot.lab1mad.Book
 import fr.antoinebaudot.lab1mad.R
 import fr.antoinebaudot.lab1mad.R.id.messageRecyclerView
 import fr.antoinebaudot.lab1mad.User
+import fr.antoinebaudot.lab1mad.chat.model.ChatLoader
+import fr.antoinebaudot.lab1mad.chat.model.Message
+import kotlinx.android.synthetic.main.activity_addbook.*
+import kotlinx.android.synthetic.main.activity_addbook.view.*
 import kotlinx.android.synthetic.main.activity_chat_messenger.*
+import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.experimental.delay
+import kotlinx.coroutines.experimental.launch
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 import kotlin.collections.ArrayList
+import kotlin.coroutines.experimental.CoroutineContext
 
 
 class ChatMessengerActivity : AppCompatActivity() {
 
     private lateinit var mRecyclerView: RecyclerView
-    private lateinit var viewAdapter: RecyclerView.Adapter<*>
+    private lateinit var mViewAdapter: ChatMessengerAdapter
     private lateinit var viewManager: RecyclerView.LayoutManager
     private lateinit var mMessageEditText: EditText
     private lateinit var mSendButton: Button
     private lateinit var mFirebaseAuth: FirebaseAuth
     private lateinit var mFirebaseUser: FirebaseUser
     private lateinit var mFirebaseDatabaseReference: DatabaseReference;
-    private lateinit var userID2: String;
-    private lateinit var messageLst : ArrayList<Message>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,112 +54,102 @@ class ChatMessengerActivity : AppCompatActivity() {
         mFirebaseDatabaseReference = FirebaseDatabase.getInstance().reference.root
         mFirebaseAuth = FirebaseAuth.getInstance()
         mFirebaseUser = mFirebaseAuth.currentUser!!
+        mRecyclerView = messageChatRecyclerView
         val user = mFirebaseUser.uid
-        var otherUserUid : String = ""
+        var otherUserUid: String = ""
         //get Second User
+        var keyForChatRecord: String? = null
+        var messageLst: ArrayList<Message> = arrayListOf()
+        var refChat: DatabaseReference? = null
+        val activity: String = intent.extras["Activity"].toString()
+        var user2: String = ""
+        var valueChange: Boolean = false
 
 
-        val activity : String = intent.extras["Activity"].toString()
-        val book : Book;
-        var myUser : User?
-        var otherUser : User?
-        messageLst = ArrayList()
-        myUser = null
-        otherUser = null
-        //has to be change
+        if (activity.equals("BookActivity")) {
+            user2 = intent.getParcelableExtra<Book>("Book").owner
+
+        } else {
+            //chatRoom
+            user2 = intent.getStringExtra("User2")
+        }
 
 
+        Log.d("Activity Name", activity)
+        Log.d("ChatMessengerActivity", "User1 = $user")
+        Log.d("ChatMessengerActivity", "User2 = $user2")
+
+        this.mMessageEditText = findViewById(R.id.messageEditText)
+        this.mSendButton = findViewById(R.id.sendButton)
 
 
+        launch {
+            messageLst.clear()
+            val loader = ChatLoader(mFirebaseDatabaseReference, user, user2)
+            loader.loadChat()
+            delay(1, TimeUnit.SECONDS)
 
-        Log.d("Activity Name",activity)
-        when (activity){
-            //Two activities can call this activity
-            "BookActivity" -> {
-                book = intent.getParcelableExtra("Book")
-                otherUserUid = book.uid
-                //ToDo creates always a new node, does not update. Problem!
-                //check if Database has already an entry.
-                mFirebaseDatabaseReference.child("chat-users").child(user).child(otherUserUid).setValue("$user-$otherUserUid")
-                mFirebaseDatabaseReference.child("chat-users").child(otherUserUid).child(user).setValue("$user-$otherUserUid")
+            keyForChatRecord = loader.keyForChatRecord
+            messageLst = loader.messageLst!!
+            if(keyForChatRecord != null) {
+                refChat = mFirebaseDatabaseReference.child("chat-record").child(keyForChatRecord.toString())
+
             }
-                //Look into the activity
-            "ChatRecordActivity" -> {
-                println("Load chat record")
+            Log.d("ChatMessengerActivity", "messageLst = ${messageLst.size}")
+            Log.d("ChatMessengerActivity", "keyForChatRecord = $keyForChatRecord")
 
-            }
+            //load the user Data
+
+
+            refChat?.addChildEventListener(object : ChildEventListener{
+                override fun onCancelled(p0: DatabaseError) {
+                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                }
+
+                override fun onChildMoved(p0: DataSnapshot, p1: String?) {
+                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                }
+
+                override fun onChildChanged(p0: DataSnapshot, p1: String?) {
+                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                }
+
+                override fun onChildAdded(snap: DataSnapshot, p1: String?) {
+                    if(snap.exists()){
+                        Log.d("AddingChildren", "old size = ${messageLst.size}")
+
+                        val message = Message(snap.child("user").value.toString(),snap.child("text").value.toString(),snap.child("timestamp").value.toString(),snap.child("pictureUrl").value.toString())
+                        messageLst.add(message)
+                        Log.d("AddingChildren", "message = ${message}")
+
+                        Log.d("AddingChildren", "new size = ${messageLst.size}")
+
+
+                        mViewAdapter.updateList(messageLst)
+                        mViewAdapter.notifyItemInserted(messageLst.size)
+                        mRecyclerView.scrollToPosition(mViewAdapter.getItemCount() -1);
+
+                    }
+
+                }
+
+                override fun onChildRemoved(p0: DataSnapshot) {
+                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                }
+
+
+            })
 
         }
 
-        val node = "$user-$otherUserUid"
+        mRecyclerView.apply {
 
-        //create User1 and User2
-        mFirebaseDatabaseReference.child("users").addListenerForSingleValueEvent(object : ValueEventListener{
-            override fun onCancelled(p0: DatabaseError?) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
-
-            override fun onDataChange(snap: DataSnapshot?) {
-                if(snap!!.exists()) {
-                    //first user
-                    for (item in snap.children) {
-                        if (item.key.equals(user)) {
-                            myUser = item.getValue(User::class.java)!!
-                        }
-                        if (item.key.equals(otherUserUid))
-                            otherUser = item.getValue(User::class.java)!!
-                    }
-                    if(myUser != null && otherUser != null){
-                        Toast.makeText(this@ChatMessengerActivity,"HatGeklappt",Toast.LENGTH_SHORT).show()
-
-                    }
-                }
-            }
+            layoutManager = LinearLayoutManager(this@ChatMessengerActivity)
+            mViewAdapter = ChatMessengerAdapter(messageLst, user)
+            adapter = mViewAdapter
 
 
-        })
-
-
-        ///Listener for every Element in the chatRoom from the user
-
-
-
-        var refChat = mFirebaseDatabaseReference.child("chat-record").child(node)
-        var chat = ""
-
-        //FirstLoading of the chatRecord
-        refChat.addListenerForSingleValueEvent(object : ValueEventListener{
-            override fun onCancelled(p0: DatabaseError?) {
-
-                println("Funktioniert nicht!!!!!!")
-            }
-
-            override fun onDataChange(snap: DataSnapshot?) {
-                if(snap!!.exists()){
-
-                    for (item in snap.children){
-
-                        val value = item.value!!
-                        if(value.equals("$user-$otherUserUid")) {
-                        }
-                        else
-                            if (!value.equals("$otherUserUid-$user")){
-                                chat = value.toString()
-                            }
-                    }
-
-                }
-                Log.d("MychatTag" ,"Der node von Chat sieht so aus - ${chat}")
-                //Toast.makeText(this@ChatMessengerActivity,"test",Toast.LENGTH_SHORT).show()
-            }
-        })
-        //Load History
-        //val node = loadChatRecord()
-
-
-        //load the user Data
-        this.mMessageEditText = findViewById(R.id.messageEditText)
-        this.mSendButton = findViewById(R.id.sendButton)
+        }
 
 
         mMessageEditText.addTextChangedListener(object : TextWatcher {
@@ -166,116 +164,41 @@ class ChatMessengerActivity : AppCompatActivity() {
 
             override fun onTextChanged(charSequ: CharSequence?, start: Int, before: Int, count: Int) {
 
-                mSendButton.isEnabled = charSequ.toString().trim().isNotEmpty()
+                if (keyForChatRecord != null) {
+                    mSendButton.isEnabled = charSequ.toString().trim().isNotEmpty()
+                }
 
             }
 
         })
-
-        //val user = readUser()
-
-
-
-
-
-
 
         mSendButton.setOnClickListener({
 
 
             // val userConnection = user1 + user2
 
-            val timeStamp = SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(Date().time)
+            val timeStamp = SimpleDateFormat("yyyy.MM.dd.HH").format(Date().time)
 
-            val message = Message(myUser!!, mMessageEditText.text.toString(), timeStamp,null)
+            val message = Message(user, mMessageEditText.text.toString(), timeStamp, null)
             //Get User2
-            refChat.push().setValue(message)
-            Log.d("MyUserTag" ,"My User - ${myUser!!.name}")
-
+            refChat?.push()?.setValue(message)
 
             mMessageEditText.text.clear()
 
+
         })
-        //Check user1 - user2
-        /*  if(){
-
-            }
-            //check user2 - user1
-            else if(){
-
-            }
-            //create new Data
-            else
-
-            })*/
-
-
-        setTheRecycleView(refChat)
-
-
-
 
     }
 
 
-    private fun setTheRecycleView(refChat : DatabaseReference) : ArrayList<Message> {
-
-        refChat.addValueEventListener(object : ValueEventListener{
-
-            override fun onCancelled(p0: DatabaseError?) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
-
-            override fun onDataChange(snap: DataSnapshot?) {
-                if(snap!!.exists()){
-                    if(messageLst.size == 0){
-                        for (item in snap.children){
-                            val message = item.getValue(Message::class.java)
-
-                            if (message != null) {
-
-                                messageLst.add(message)
-                            }
-                        }
-
-
-                    }else {
-                        val message = snap.children.last().getValue(Message::class.java)
-                        if (message != null) {
-                            messageLst.add(message)
-                        }
-                    }
-                }
-            }
-
-
-        })
-
-
-        messageChatRecyclerView.apply {
-
-
-            setHasFixedSize(true)
-
-            // use a linear layout manager
-            layoutManager = LinearLayoutManager(this@ChatMessengerActivity)
-
-            // specify an viewAdapter (see also next example)
-            adapter = ChatMessengerAdapter(messageLst)
-
-
-            //setUpDrawer()
-
-        }
-
-
-
-        return messageLst
-
-    }
-
+    /**
+     * TODo save data
+     *
+     *
+     */
 
 }
+
 
 
 

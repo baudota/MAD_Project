@@ -69,6 +69,7 @@ public class ListActivity extends AppCompatActivity {
     }
 
 
+
     /*private class ItemOffsetDecoration extends RecyclerView.ItemDecoration {
         private int itemMarginTop;
         private int ItemMarginRight;

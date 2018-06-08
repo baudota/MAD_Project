@@ -42,7 +42,7 @@ public class GetBookCoverService extends IntentService {
         System.out.println("SERVICE ACTION STARTED");
 
         try {
-            Log.i("imageLink",imageLink);
+            //Log.i("imageLink",imageLink);
             URL coverURL = new URL (imageLink);
             HttpURLConnection connIv = (HttpURLConnection) coverURL.openConnection();
             connIv.setDoInput(true);

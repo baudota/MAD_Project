@@ -136,29 +136,28 @@ public class SearchBooks extends AppCompatActivity {
 
 
                            for (DataSnapshot issue : dataSnapshot.getChildren()) {
-                               //ToDo, search title with wildcards
                                 String information = (String) issue.child("title").getValue() + "\n";
-
                                 information = information.concat((String) issue.child("author").getValue());
                                 System.out.println(information);
                                 //lst.add(information);
-
-                                //Book bk = issue.getValue(Book.class);
-                                Book bk = new Book(issue.child("owner").getValue().toString(), issue.child("isbn").getValue().toString(),
+                                Book bk = issue.getValue(Book.class);
+                                /*Book bk = new Book(null, issue.child("isbn").getValue().toString(),
                                         issue.child("author").getValue().toString(),
                                         issue.child("title").getValue().toString(),
                                         issue.child("subtitle").getValue().toString(),
                                         issue.child("description").getValue().toString(),
                                         "" );
+*/                                if(bk != null && bk.getOwner() != null && !mAuth.getUid().equals(bk.getOwner())) {
 
-                                System.out.println(bk.getTitle() + "  " + bk.getIsbn());
+                                   System.out.println(bk.getTitle() + "  " + bk.getIsbn());
 
-                                lst.add(bk);
+                                   lst.add(bk);
+                               }
 
                             }
 
                             pB.setVisibility(View.GONE);
-                            resultsLayout.setVisibility(View.VISIBLE);
+                           resultsLayout.setVisibility(View.VISIBLE);
                             mAdapter = new Adapter(getApplicationContext(), lst);
                             mRecyclerView.setAdapter(mAdapter);
 

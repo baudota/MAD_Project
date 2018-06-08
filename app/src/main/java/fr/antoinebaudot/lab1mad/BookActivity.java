@@ -36,9 +36,7 @@ public class BookActivity extends AppCompatActivity {
         Intent i = getIntent();
         book = i.getParcelableExtra("Book");
 
-        System.out.println("UID " + book.getUid());
-        System.out.println("Author " + book.getAuthor());
-        System.out.println("Title " + book.getTitle());
+
 
         myToolbar = findViewById(R.id.myToolbar_book_activity);
         setSupportActionBar(myToolbar);

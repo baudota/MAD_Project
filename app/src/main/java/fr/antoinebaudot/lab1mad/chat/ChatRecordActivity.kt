@@ -15,6 +15,9 @@ import fr.antoinebaudot.lab1mad.R.id.messageRecyclerView
 import fr.antoinebaudot.lab1mad.R.id.showProfileToolbar
 import fr.antoinebaudot.lab1mad.User
 import kotlinx.android.synthetic.main.activity_chat.*
+import android.support.v7.widget.DividerItemDecoration
+
+
 
 class ChatRecordActivity : AppCompatActivity() {
 
@@ -43,25 +46,24 @@ class ChatRecordActivity : AppCompatActivity() {
         mFirebase = FirebaseDatabase.getInstance().reference.root
         mFirebaseUser= FirebaseAuth.getInstance().currentUser!!
 
-        var userLst : ArrayList<User> = arrayListOf()
+        val userLst : ArrayList<User> = arrayListOf()
         val userIdLst : HashSet<String> = hashSetOf()
-
 
         //read DataBase
         mFirebase.child("chat-users").child(mFirebaseUser.uid).addListenerForSingleValueEvent(object : ValueEventListener{
-            override fun onCancelled(p0: DatabaseError?) {
+            override fun onCancelled(p0: DatabaseError) {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
 
-            override fun onDataChange(snap: DataSnapshot?) {
-                if(snap!!.exists()) {
+            override fun onDataChange(snap: DataSnapshot) {
+                if(snap.exists()) {
 
                     for (item in snap.children) {
                         if (item != null) {
                             Log.d("MychatTag", "Add value to userIDlst ${item.key}")
 
 
-                            userIdLst.add(item.key)
+                            userIdLst.add(item.key!!)
                         }
                     }
                     Log.d("MychatTag", "Size of userIDLst First ${userIdLst.size}")
@@ -84,14 +86,15 @@ class ChatRecordActivity : AppCompatActivity() {
 
     private fun readHistoryRecord(userIDLst : HashSet<String>, userLst : ArrayList<User>, ref: DatabaseReference) {
 
+        val userHashMap : LinkedHashMap<String,User> = LinkedHashMap()
 
         ref.child("users").addValueEventListener(object : ValueEventListener{
-            override fun onCancelled(p0: DatabaseError?) {
+            override fun onCancelled(p0: DatabaseError) {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
-            override fun onDataChange(snapshot: DataSnapshot?) {
+            override fun onDataChange(snapshot: DataSnapshot) {
 
-                if(snapshot!!.exists()) {
+                if(snapshot.exists()) {
                     Log.d("MychatTag" ,"Gehe in die if abfrage")
 
                     for (item in snapshot.children){
@@ -100,9 +103,9 @@ class ChatRecordActivity : AppCompatActivity() {
                         if(userIDLst.contains(item.key)){
                             val user = item.getValue(User::class.java)
                             Log.d("MychatTag" ,"User is != null ? ? = ${user != null}")
-                            if(user != null) {
+                            if(user != null && item.key != null) {
                                 //set The User for all
-                                userLst.add(user)
+                                userHashMap.set(item.key!!,user)
                             }
                         }
                     }
@@ -116,7 +119,7 @@ class ChatRecordActivity : AppCompatActivity() {
                         layoutManager = LinearLayoutManager(this@ChatRecordActivity)
 
                         // specify an viewAdapter (see also next example)
-                        adapter = ChatAdapter(userLst)
+                        adapter = ChatAdapter(userHashMap)
 
 
                         //setUpDrawer()
@@ -130,5 +133,8 @@ class ChatRecordActivity : AppCompatActivity() {
         Log.d("MychatTag" ,"Wurde die Userliste aktualisiert? size  = ${userLst.size} ")
 
     }
+
+
+
 
 }
