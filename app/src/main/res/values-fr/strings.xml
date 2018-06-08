@@ -23,4 +23,5 @@
     <string name="barcode">Scanner le code barre</string>
     <string name="clear">Vider</string>
     <string name="findByIsbn">Chercher par ISBN</string>
+    <string name="chat_history_text_view_content">tmp</string>
 </resources>

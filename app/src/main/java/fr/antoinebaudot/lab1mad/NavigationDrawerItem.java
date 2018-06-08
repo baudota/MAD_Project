@@ -52,6 +52,7 @@ public class NavigationDrawerItem {
                 R.drawable.icon_book,
                 R.drawable.ic_searchbooks,
                 R.drawable.ic_requests,
+                R.drawable.chat_room,
                 R.drawable.icon_disconnect
 
         };
@@ -64,6 +65,7 @@ public class NavigationDrawerItem {
                 R.string.menuUserBooks,
                 R.string.searchbooks,
                 R.string.requests,
+                R.string.chat,
                 R.string.menuLeave
 
         };

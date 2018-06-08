@@ -148,10 +148,12 @@ public class SearchBooks extends AppCompatActivity {
                                         issue.child("subtitle").getValue().toString(),
                                         issue.child("description").getValue().toString(),
                                         "" );
-*/
-                                System.out.println(bk.getTitle() + "  " + bk.getIsbn());
+*/                                if(bk != null && bk.getOwner() != null && !mAuth.getUid().equals(bk.getOwner())) {
 
-                                lst.add(bk);
+                                   System.out.println(bk.getTitle() + "  " + bk.getIsbn());
+
+                                   lst.add(bk);
+                               }
 
                             }
 

@@ -16,6 +16,9 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
+/**
+ * Depricated ?
+ */
 public class ListActivity extends AppCompatActivity {
 
     private RecyclerView mRecyclerView;
@@ -54,7 +57,9 @@ public class ListActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         mAdapter = new Adapter(getApplicationContext(), tst);
+
         mRecyclerView.setAdapter(mAdapter);
+
     }
 
     @Override
