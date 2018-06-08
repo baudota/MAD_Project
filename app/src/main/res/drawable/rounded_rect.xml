@@ -2,8 +2,7 @@
     android:shape="rectangle"
     android:id="@+id/backgroundMessage">
     <solid android:color="@color/colorMessage" />
-    <corners
-
+    <corner
         android:topLeftRadius="8dp"
         android:topRightRadius="8dp"/>
 
