@@ -74,23 +74,24 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Book tmp = mDataset.get(position);
-        holder.mTextView.setText(tmp.getTitle());
-        holder.mDescView.setText(tmp.getDescription());
-        holder.bookId.setText(tmp.getIsbn() + "-" + tmp.getOwner());
+
+        if (tmp != null) {
+
+            holder.mTextView.setText(tmp.getTitle());
+            holder.mDescView.setText(tmp.getDescription());
+            holder.bookId.setText(tmp.getIsbn() + "-" + tmp.getOwner());
 
 
-        if (tmp.getCover() != null) {
+            if (tmp.getCover() != null) {
 
-            Bitmap cover = decodeBase64(tmp.getCover());
-            holder.coverBook.setImageBitmap(cover);
+                Bitmap cover = decodeBase64(tmp.getCover());
+                holder.coverBook.setImageBitmap(cover);
 
-        } else {
-            holder.coverBook.setImageResource(R.drawable.icon_book);
+            } else {
+                holder.coverBook.setImageResource(R.drawable.icon_book);
+            }
+
         }
-
-
-
-
 
     }
 

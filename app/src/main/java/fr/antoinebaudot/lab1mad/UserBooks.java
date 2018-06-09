@@ -88,7 +88,7 @@ public class UserBooks extends AppCompatActivity {
 
     private void setUserBooks(){
 
-        userBooks = new ArrayList<>();
+
 
         FirebaseUser user = mAuth.getCurrentUser();
 
@@ -111,19 +111,41 @@ public class UserBooks extends AppCompatActivity {
              query.addListenerForSingleValueEvent(new ValueEventListener() {
                  @Override
                  public void onDataChange(DataSnapshot dataSnapshot) {
-                     //Log.d("Books", String.valueOf(dataSnapshot.getChildrenCount()));
-                    Book book ;
-                     for (String bk : bks) {
-                         book = dataSnapshot.child(bk).getValue(Book.class);
-                         //System.out.println(book.getTitle());
-                         userBooks.add(book);
+
+                     if (dataSnapshot.exists()){
+
+                         userBooks = new ArrayList<>();
+
+                         Book book ;
+                         for (String bk : bks) {
+                             book = dataSnapshot.child(bk).getValue(Book.class);
+                             //System.out.println(book.getTitle());
+                             userBooks.add(book);
+
+                         }
+
 
                      }
 
-                     mAdapter = new Adapter(getApplicationContext(), userBooks);
-                     mRecyclerView.setAdapter(mAdapter);
-                     pb.setVisibility(View.GONE);
-                     resultsLayout.setVisibility(View.VISIBLE);
+                     System.out.println(userBooks.size());
+
+                     for (Book tmp : userBooks){
+                         if (tmp == null){
+                             userBooks.remove(tmp);
+                         }
+                     }
+
+                     if (userBooks.size() > 0 ){
+
+
+                         mAdapter = new Adapter(getApplicationContext(), userBooks);
+                         mRecyclerView.setAdapter(mAdapter);
+                         pb.setVisibility(View.GONE);
+                         resultsLayout.setVisibility(View.VISIBLE);
+
+
+                     }
+
 
 
                  }
