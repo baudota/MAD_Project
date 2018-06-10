@@ -59,7 +59,7 @@ class ChatMessengerActivity : AppCompatActivity() {
 
         val myToolbar = findViewById<Toolbar>(R.id.showChatToolbar);
         setSupportActionBar(myToolbar);
-        myToolbar.navigationIcon = resources.getDrawable(R.drawable.ic_back_nav);
+        myToolbar.navigationIcon = resources.getDrawable(R.drawable.ic_action_open_nav);
         myToolbar?.setNavigationOnClickListener(View.OnClickListener {
             finish()
         })
