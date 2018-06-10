@@ -35,6 +35,10 @@ package fr.antoinebaudot.lab1mad;
         import com.google.firebase.database.DatabaseReference;
         import com.google.firebase.database.FirebaseDatabase;
 
+        import org.json.JSONArray;
+        import org.json.JSONException;
+        import org.json.JSONObject;
+
         import java.io.ByteArrayOutputStream;
         import java.io.File;
         import java.io.IOException;
@@ -212,7 +216,36 @@ public class AddBook extends AppCompatActivity {
         setSubtitle(json);
         setDescription(json);
         getImage(json);
+        setIsbn(json);
     }
+
+    public void setIsbn(String json) {
+        EditText authorText = (EditText) findViewById(R.id.isbn);
+        String isbn;
+        try {
+            int startIndex = json.indexOf("ISBN_13");
+            int endIndex = json.indexOf("}", startIndex);
+            String sub = json.substring(startIndex, endIndex);
+            isbn = sub.split(":")[1].trim();
+            authorText.setText(isbn.substring(1, isbn.length() - 1), EDITABLE);
+            //ISBN_13",
+            //      "identifier": "9788809025417"
+            //
+            /*JSONObject obj = new JSONObject(json);
+            JSONArray m_jArry = obj.getJSONArray("industryIdentifiers");
+            System.out.println("json = [" + m_jArry.getJSONObject(2).toString());*/
+        }catch (IndexOutOfBoundsException e) {
+                authorText.setText("No ISBN found", EDITABLE);
+            }
+
+        /**
+         *  "ISBN_13",
+         * "identifier": "9781557427663"
+         *  }
+         */
+
+    }
+
 
     private void setAuthor(String json) {
         EditText authorText = (EditText) findViewById(R.id.authorId);
@@ -400,6 +433,8 @@ public class AddBook extends AppCompatActivity {
         image.compress(compressFormat, quality, byteArrayOS);
         return Base64.encodeToString(byteArrayOS.toByteArray(), Base64.DEFAULT);
     }
+
+
 
     public class CoverReceiver extends ResultReceiver {
 

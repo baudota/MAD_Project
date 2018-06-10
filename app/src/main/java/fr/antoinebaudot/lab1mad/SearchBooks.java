@@ -21,6 +21,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.google.android.gms.vision.text.Line;
 import com.google.firebase.auth.FirebaseAuth;
@@ -165,8 +166,14 @@ public class SearchBooks extends AppCompatActivity {
 
 
 
+                        }else {
+                            Toast.makeText(getApplicationContext(),"There is no " + searchType + " like that",Toast.LENGTH_LONG).show();
+                            pB.setVisibility(View.GONE);
+                            resultsLayout.setVisibility(View.VISIBLE);
+
                         }
-                        }
+
+                    }
 
 
                     @Override

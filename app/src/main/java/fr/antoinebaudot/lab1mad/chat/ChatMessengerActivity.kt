@@ -115,8 +115,8 @@ class ChatMessengerActivity : AppCompatActivity() {
 
 
             Log.d("MessengerLst", "The size of the within the coroutine $messageLst")
-            if(keyForChatRecord != null) {
-                refChat = mFirebaseDatabaseReference.child("chat-record").child(keyForChatRecord.toString())
+            if(loader.keyForChatRecord != null) {
+                refChat = mFirebaseDatabaseReference.child("chat-record").child(loader.keyForChatRecord.toString())
 
             }
             Log.d("ChatMessengerActivity", "messageLst = ${messageLst.size}")
@@ -188,8 +188,10 @@ class ChatMessengerActivity : AppCompatActivity() {
 
             override fun onTextChanged(charSequ: CharSequence?, start: Int, before: Int, count: Int) {
 
-                if (keyForChatRecord != null &&  loader.objUser1 != null) {
-                    mViewAdapter.objUser = objUser1
+                if (keyForChatRecord != null &&  loader.objUser1 != null && loader.keyForChatRecord != null) {
+                    mViewAdapter.objUser = loader.objUser1
+                    objUser1 = loader.objUser1
+                    keyForChatRecord = loader.keyForChatRecord
                     mSendButton.isEnabled = charSequ.toString().trim().isNotEmpty()
                 }
 
