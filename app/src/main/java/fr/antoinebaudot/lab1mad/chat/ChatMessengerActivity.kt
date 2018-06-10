@@ -2,6 +2,7 @@ package fr.antoinebaudot.lab1mad.chat
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v4.widget.DrawerLayout
 import android.support.v7.recyclerview.R.attr.layoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -10,6 +11,7 @@ import android.text.Editable
 import android.text.Layout
 import android.text.TextWatcher
 import android.util.Log
+import android.view.Gravity
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -18,6 +20,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
 import fr.antoinebaudot.lab1mad.Book
+import fr.antoinebaudot.lab1mad.NavigationDrawerFragment
 import fr.antoinebaudot.lab1mad.R
 import fr.antoinebaudot.lab1mad.R.id.messageRecyclerView
 import fr.antoinebaudot.lab1mad.R.id.showChatToolbar
@@ -58,8 +61,9 @@ class ChatMessengerActivity : AppCompatActivity() {
         setSupportActionBar(myToolbar);
         myToolbar.navigationIcon = resources.getDrawable(R.drawable.ic_back_nav);
         myToolbar?.setNavigationOnClickListener(View.OnClickListener {
-            finish();
-        });
+            finish()
+        })
+        setUpDrawer(myToolbar)
         var objUser1 : User? = null
         var objUser2 : User? = null
         //When they write a message_view
@@ -222,6 +226,12 @@ class ChatMessengerActivity : AppCompatActivity() {
 
     }
 
+    private fun setUpDrawer(myToolbar: Toolbar) {
+        val drawerFragment = supportFragmentManager.findFragmentById(R.id.nav_drawer_fragment) as NavigationDrawerFragment
+        val drawerLayout = findViewById<View>(R.id.drawerLayoutChatMessenger) as DrawerLayout
+        drawerFragment.setUpDrawer(R.id.nav_drawer_fragment, drawerLayout, myToolbar)
+        myToolbar.setNavigationOnClickListener { drawerLayout.openDrawer(Gravity.LEFT) }
+    }
 
     /**
      * TODo save data

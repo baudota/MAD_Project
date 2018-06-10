@@ -11,13 +11,12 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
 import fr.antoinebaudot.lab1mad.NavigationDrawerFragment
 import fr.antoinebaudot.lab1mad.R
-import fr.antoinebaudot.lab1mad.R.id.messageRecyclerView
-import fr.antoinebaudot.lab1mad.R.id.showProfileToolbar
 import fr.antoinebaudot.lab1mad.User
 import kotlinx.android.synthetic.main.activity_chat.*
 import android.support.v7.widget.DividerItemDecoration
 import android.view.Gravity
 import android.view.View
+import fr.antoinebaudot.lab1mad.R.id.*
 
 
 class ChatRecordActivity : AppCompatActivity() {
@@ -27,9 +26,8 @@ class ChatRecordActivity : AppCompatActivity() {
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var mFirebase: DatabaseReference
     private lateinit var mFirebaseUser: FirebaseUser
-
-
     private lateinit var myToolbar: Toolbar
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
@@ -37,7 +35,7 @@ class ChatRecordActivity : AppCompatActivity() {
         myToolbar = showProfileToolbar as Toolbar
         setSupportActionBar(myToolbar)
 
-        //setUpDrawer()
+        setUpDrawer(myToolbar)
 
         //DataSet = ChatHistory
 
@@ -133,17 +131,16 @@ class ChatRecordActivity : AppCompatActivity() {
         Log.d("MychatTag", "Wurde die Userliste aktualisiert? size  = ${userLst.size} ")
 
     }
-}
 
-/*
-    private fun setUpDrawer() {
+
+    private fun setUpDrawer(myToolbar: Toolbar) {
         val drawerFragment = supportFragmentManager.findFragmentById(R.id.nav_drawer_fragment) as NavigationDrawerFragment
-        val drawerLayout = findViewById<View>(R.id.drawerLayout) as DrawerLayout
+        val drawerLayout = findViewById<View>(R.id.drawerLayoutChatRecord) as DrawerLayout
         drawerFragment.setUpDrawer(R.id.nav_drawer_fragment, drawerLayout, myToolbar)
         myToolbar.setNavigationOnClickListener { drawerLayout.openDrawer(Gravity.LEFT) }
     }
-    */
 
+}
     /*
     private void setUpDrawer() {
         NavigationDrawerFragment drawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.nav_drawer_fragment);
