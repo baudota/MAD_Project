@@ -184,8 +184,8 @@ class ChatMessengerActivity : AppCompatActivity() {
 
             override fun onTextChanged(charSequ: CharSequence?, start: Int, before: Int, count: Int) {
 
-                if (keyForChatRecord != null && (mViewAdapter.objUser != null || loader.objUser1 != null)) {
-                    //mViewAdapter.objUser = objUser1
+                if (keyForChatRecord != null &&  loader.objUser1 != null) {
+                    mViewAdapter.objUser = objUser1
                     mSendButton.isEnabled = charSequ.toString().trim().isNotEmpty()
                 }
 
