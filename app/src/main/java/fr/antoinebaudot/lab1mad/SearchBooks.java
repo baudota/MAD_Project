@@ -58,7 +58,6 @@ public class SearchBooks extends AppCompatActivity {
 
 
         setContentView(R.layout.activity_search_books);
-        setContentView(R.layout.activity_search_books);
 
         editKeyword = (EditText) findViewById(R.id.editTextKeyword);
         pB = (ProgressBar) findViewById(R.id.pb);
