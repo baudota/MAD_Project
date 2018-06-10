@@ -11,6 +11,9 @@ class ChatLoader (val reference : DatabaseReference, val user1 : String, val use
 
     var messageLst : ArrayList<Message>? = null
     var keyForChatRecord : String? = null
+    var objUser1 : User? = null
+    var objUser2 : User? = null
+
 
 
 
@@ -69,11 +72,36 @@ class ChatLoader (val reference : DatabaseReference, val user1 : String, val use
                         reference.child("chat-users").child(user2).child(user1).setValue("$user1-$user2")
                         keyForChatRecord = "$user1-$user2"
                     }
+
+                reference.child("users").addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onCancelled(p0: DatabaseError) {
+
+                    }
+
+                    override fun onDataChange(snap: DataSnapshot) {
+
+                        if(snap.exists()){
+
+                            for (user in snap.children){
+                                if(user.key == user1) {
+                                    Log.d("KeyUser", "The key of User was  saved ${user.key}")
+                                    objUser1 = user.getValue(User::class.java)
+                                    break
+                                }
+                            }
+
+                        }
+                    }
+
+
+                })
+
             }
         })
     if(messageLst == null){
         messageLst = arrayListOf()
     }
+
 
     }
 }

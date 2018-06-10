@@ -2,6 +2,7 @@ package fr.antoinebaudot.lab1mad.chat
 
 import android.content.Intent
 import android.graphics.*
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -50,6 +51,9 @@ class ChatAdapter(val userHash : LinkedHashMap<String,User>) : RecyclerView.Adap
             // Picasso.get().load(user.profilePicture).into(image)
         }else
         {
+            val icon = ContextCompat.getDrawable(holder.view.context, R.mipmap.ic_launcher_round)
+            imageView.setImageDrawable(icon)
+
             // Set tmp image
             // imageView.setImageIcon(holder.view.resources.getP)
 
@@ -73,7 +77,7 @@ class CustomViewHolder(val userHash : LinkedHashMap<String,User>,val  view : Vie
 
             if(userHash[it]?.name?.equals(name)!!){
 
-                v?.setBackgroundColor(Color.GRAY)
+                //v?.setBackgroundColor(Color.GRAY)
 
                 val intent = Intent(view.context, ChatMessengerActivity::class.java)
                 intent.putExtra("Activity", "ChatRecordActivity")

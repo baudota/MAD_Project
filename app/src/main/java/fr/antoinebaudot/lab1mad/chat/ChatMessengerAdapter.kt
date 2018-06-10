@@ -19,10 +19,14 @@ import kotlinx.android.synthetic.main.chat_record_item.view.*
 import kotlinx.android.synthetic.main.message_view.view.*
 import android.os.Build
 import android.support.annotation.RequiresApi
+import android.support.v4.content.ContextCompat
+import android.util.Log
 import android.widget.ImageView
+import fr.antoinebaudot.lab1mad.MainActivity
+import fr.antoinebaudot.lab1mad.User
 
 
-class ChatMessengerAdapter(var chatHistory: ArrayList<Message>,val user: String) : RecyclerView.Adapter<CustomChatViewHolder>(){
+class ChatMessengerAdapter(private var chatHistory: ArrayList<Message>,var objUser: User?) : RecyclerView.Adapter<CustomChatViewHolder>(){
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomChatViewHolder {
@@ -35,53 +39,55 @@ class ChatMessengerAdapter(var chatHistory: ArrayList<Message>,val user: String)
     override fun getItemCount() : Int = chatHistory.size
 
 
-    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onBindViewHolder(holder: CustomChatViewHolder, position: Int) {
 
         val textView = holder.view.message_view_message_text
-        val imageView = holder.view.message_view_proifle_picture
+        val imageView = holder.view.proflePicture
         val timeStampText = holder.view.message_view_timestampOfMessage
-        //val colorUser = holder.view.context.getColor(R.color.colorPrimary)
-        val corner = holder.view.message_corner as ImageView
+
+
         val colorUser = "#2874A6"
         val colorOtherUser = "#44d7da"
-        val con = holder.view.context.getDrawable(R.drawable.rounded_rect)
-        timeStampText?.text = chatHistory[position].timestamp
+        val tmp = chatHistory[position].timestamp
+        timeStampText?.text = tmp?.removeRange(tmp.length-6,tmp.length)
         textView?.text = chatHistory[position].text
+        val user = chatHistory[position].user
+        Log.d("UserAdapter", "User =  ${user.toString()}")
+        Log.d("UserAdapter", "Position =  ${position}")
 
-        val drawableTmp = corner.background.mutate()
-
-        if(chatHistory[position].user == user){
-
-           /* drawableTmp.setColorFilter(Color.parseColor(colorUser),
-                    PorterDuff.Mode.MULTIPLY)*/
-            textView?.setBackgroundColor(Color.parseColor(colorUser))
-            timeStampText?.setBackgroundColor(Color.parseColor(colorUser))
-//            imageView.setBackgroundColor(Color.parseColor(colorUser))
-        }else
-        {
-           // drawableTmp.setColorFilter(Color.parseColor(colorOtherUser), PorterDuff.Mode.MULTIPLY)
-
-            textView?.setBackgroundColor(Color.parseColor(colorOtherUser))
-            timeStampText?.setBackgroundColor(Color.parseColor(colorOtherUser))
+        Log.d("UserAdapter", "Der cut des Timestamps ${tmp?.removeRange(tmp.length-6,tmp.length)}")
+        Log.d("UserAdapter", "User email ${user?.email}")
+        if(user != null) {
+            if (user.email == objUser?.email) {
 
 
+                textView?.setBackgroundColor(Color.parseColor(colorUser))
+                timeStampText?.setBackgroundColor(Color.parseColor(colorUser))
+
+                //imageView.setBackgroundColor(Color.parseColor(colorUser))
+            } else {
+
+                textView?.setBackgroundColor(Color.parseColor(colorOtherUser))
+                timeStampText?.setBackgroundColor(Color.parseColor(colorOtherUser))
+
+
+            }
+            if(user.profilePicture != null){
+                val bitmap = MainActivity.decodeBase64(user.profilePicture)
+                imageView.setImageBitmap(bitmap)
+
+            }else {
+                val icon = ContextCompat.getDrawable(holder.view.context, R.mipmap.ic_launcher_round)
+                imageView.setImageDrawable(icon)
+            }
         }
-
-        //Loading Picture
-        val pictureUrl = chatHistory[position].pictureUrl
-        if(pictureUrl != null ) {
-            val bitmap = decodeBase64(pictureUrl)
-            imageView?.setImageBitmap(bitmap)
-        }
-        //You have to change the Message
-        //
     }
 
-     fun updateList(newChatHistory : ArrayList<Message>){
+     fun updateList(newChatHistory : ArrayList<Message>, user : User?){
         val diffResult : DiffUtil.DiffResult = DiffUtil.calculateDiff(MyDiffUtil(chatHistory,newChatHistory))
         diffResult.dispatchUpdatesTo(this)
         chatHistory = newChatHistory
+         objUser = user
 
     }
 

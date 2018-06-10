@@ -4,7 +4,7 @@ import android.graphics.Picture
 import fr.antoinebaudot.lab1mad.User
 import java.sql.Timestamp
 
-public class Message(var user: String?, var text: String?, var timestamp: String?,var pictureUrl : String?) {
+public class Message(var user: User?, var text: String?, var timestamp: String?,var pictureUrl : String?) {
 
     /**
      * standard constructor, otherwise firebase does not work

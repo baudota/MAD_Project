@@ -60,7 +60,8 @@ class ChatMessengerActivity : AppCompatActivity() {
         myToolbar?.setNavigationOnClickListener(View.OnClickListener {
             finish();
         });
-
+        var objUser1 : User? = null
+        var objUser2 : User? = null
 
         //When they write a message_view
         mFirebaseDatabaseReference = FirebaseDatabase.getInstance().reference.root
@@ -95,6 +96,7 @@ class ChatMessengerActivity : AppCompatActivity() {
         this.mSendButton = findViewById(R.id.sendButton)
 
 
+
         launch {
             messageLst.clear()
             val loader = ChatLoader(mFirebaseDatabaseReference, user, user2)
@@ -102,7 +104,12 @@ class ChatMessengerActivity : AppCompatActivity() {
             delay(1, TimeUnit.SECONDS)
 
             keyForChatRecord = loader.keyForChatRecord
-            messageLst = loader.messageLst!!
+            //Log.d("SizeOfLst" , "Size of Lst after loader ${messageLst.size}")
+            objUser1 = loader.objUser1
+            objUser2 = loader.objUser2
+
+
+            Log.d("MessengerLst", "The size of the within the coroutine $messageLst")
             if(keyForChatRecord != null) {
                 refChat = mFirebaseDatabaseReference.child("chat-record").child(keyForChatRecord.toString())
 
@@ -115,31 +122,35 @@ class ChatMessengerActivity : AppCompatActivity() {
 
             refChat?.addChildEventListener(object : ChildEventListener{
                 override fun onCancelled(p0: DatabaseError) {
-                    //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                 }
 
                 override fun onChildMoved(p0: DataSnapshot, p1: String?) {
-                    //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                 }
 
                 override fun onChildChanged(p0: DataSnapshot, p1: String?) {
-                    //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                 }
 
                 override fun onChildAdded(snap: DataSnapshot, p1: String?) {
                     if(snap.exists()){
                         Log.d("AddingChildren", "old size = ${messageLst.size}")
 
-                        val message = Message(snap.child("user").value.toString(),snap.child("text").value.toString(),snap.child("timestamp").value.toString(),snap.child("pictureUrl").value.toString())
+                        Log.d("MessengerLst", "The size of the within the coroutine $messageLst")
+
+                        val message = Message(snap.child("user").getValue(User::class.java),snap.child("text").value.toString(),snap.child("timestamp").value.toString(),snap.child("pictureUrl").value.toString())
                         messageLst.add(message)
+                        Log.d("MessengerLst", "The size of the within the coroutine $messageLst")
+
                         Log.d("AddingChildren", "message = ${message}")
 
                         Log.d("AddingChildren", "new size = ${messageLst.size}")
 
 
-                        mViewAdapter.updateList(messageLst)
-                        mViewAdapter.notifyItemInserted(messageLst.size)
-                        mRecyclerView.scrollToPosition(mViewAdapter.getItemCount() -1);
+
+                            mViewAdapter.updateList(messageLst, objUser1)
+                            mViewAdapter.notifyItemInserted(messageLst.size)
+                            mRecyclerView.scrollToPosition(mViewAdapter.itemCount - 1);
+
+
 
                     }
 
@@ -154,14 +165,8 @@ class ChatMessengerActivity : AppCompatActivity() {
 
         }
 
-        mRecyclerView.apply {
-
-            layoutManager = LinearLayoutManager(this@ChatMessengerActivity)
-            mViewAdapter = ChatMessengerAdapter(messageLst, user)
-            adapter = mViewAdapter
 
 
-        }
 
 
         mMessageEditText.addTextChangedListener(object : TextWatcher {
@@ -176,7 +181,8 @@ class ChatMessengerActivity : AppCompatActivity() {
 
             override fun onTextChanged(charSequ: CharSequence?, start: Int, before: Int, count: Int) {
 
-                if (keyForChatRecord != null) {
+                if (keyForChatRecord != null && objUser1 != null) {
+                    mViewAdapter.objUser = objUser1
                     mSendButton.isEnabled = charSequ.toString().trim().isNotEmpty()
                 }
 
@@ -189,16 +195,27 @@ class ChatMessengerActivity : AppCompatActivity() {
 
             // val userConnection = user1 + user2
 
-            val timeStamp = SimpleDateFormat("yyyy.MM.dd.HH").format(Date().time)
+            val timeStamp = SimpleDateFormat("yyyy.MM.dd.HH.SS").format(Date().time)
 
-            val message = Message(user, mMessageEditText.text.toString(), timeStamp, null)
+            val message = Message(objUser1, mMessageEditText.text.toString(), timeStamp, null)
             //Get User2
             refChat?.push()?.setValue(message)
 
             mMessageEditText.text.clear()
 
 
+
         })
+
+
+
+        mRecyclerView.apply {
+
+            layoutManager = LinearLayoutManager(this@ChatMessengerActivity)
+            mViewAdapter = ChatMessengerAdapter(messageLst, objUser1)
+            adapter = mViewAdapter
+        }
+
 
     }
 

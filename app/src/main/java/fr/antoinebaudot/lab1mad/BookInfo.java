@@ -28,6 +28,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import org.w3c.dom.Text;
 
+import fr.antoinebaudot.lab1mad.chat.ChatMessengerActivity;
+
 public class BookInfo extends AppCompatActivity {
 
     private Toolbar myToolbar ;
@@ -48,10 +50,13 @@ public class BookInfo extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_info);
 
+        Intent intent = getIntent() ;
 
         myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
-        myToolbar.setNavigationIcon(R.drawable.ic_back_nav);
+        //if(!activity.equals("Adapter")) {
+            myToolbar.setNavigationIcon(R.drawable.ic_back_nav);
+
         myToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -59,7 +64,6 @@ public class BookInfo extends AppCompatActivity {
             }
         });
 
-        Intent intent = getIntent() ;
         bookId = intent.getStringExtra("BOOK_ID");
 
 
@@ -183,6 +187,10 @@ public class BookInfo extends AppCompatActivity {
         switch(item.getItemId()){
             case R.id.contactOwner:
                 //OPEN A CHAT WITH THE BOOK OWNER
+                Intent startChat = new Intent(this, ChatMessengerActivity.class);
+                startChat.putExtra("Activity","BookActivity");
+                startChat.putExtra("Book",this.bk);
+                startActivity(startChat);
                 break ;
 
             default :

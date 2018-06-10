@@ -39,16 +39,13 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
             coverBook = (ImageView) itemView.findViewById(R.id.bookCover);
             bookId = (TextView) itemView.findViewById(R.id.bookId);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    String id = bookId.getText().toString();
-                    Intent intent = new Intent(view.getContext(),BookInfo.class);
+            itemView.setOnClickListener(view -> {
+                String id = bookId.getText().toString();
+                Intent intent = new Intent(view.getContext(),BookInfo.class);
 
-
-                    intent.putExtra("BOOK_ID",id);
-                    view.getContext().startActivity(intent);
-                }
+                //intent.putExtra("Activity","Adapter");
+                intent.putExtra("BOOK_ID",id);
+                view.getContext().startActivity(intent);
             });
 
         }
