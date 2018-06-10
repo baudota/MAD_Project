@@ -34,6 +34,7 @@ class ChatRecordActivity : AppCompatActivity() {
 
         myToolbar = showProfileToolbar as Toolbar
         setSupportActionBar(myToolbar)
+        myToolbar.navigationIcon = resources.getDrawable(R.drawable.ic_back_nav);
 
         setUpDrawer(myToolbar)
 

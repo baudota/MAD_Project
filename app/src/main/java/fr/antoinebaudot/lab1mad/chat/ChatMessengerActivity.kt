@@ -63,7 +63,7 @@ class ChatMessengerActivity : AppCompatActivity() {
         myToolbar?.setNavigationOnClickListener(View.OnClickListener {
             finish()
         })
-        setUpDrawer(myToolbar)
+        //setUpDrawer(myToolbar)
         var objUser1 : User? = null
         var objUser2 : User? = null
         //When they write a message_view
