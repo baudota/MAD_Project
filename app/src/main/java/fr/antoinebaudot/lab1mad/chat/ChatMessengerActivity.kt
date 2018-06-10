@@ -62,7 +62,6 @@ class ChatMessengerActivity : AppCompatActivity() {
         });
         var objUser1 : User? = null
         var objUser2 : User? = null
-
         //When they write a message_view
         mFirebaseDatabaseReference = FirebaseDatabase.getInstance().reference.root
         mFirebaseAuth = FirebaseAuth.getInstance()
@@ -88,6 +87,8 @@ class ChatMessengerActivity : AppCompatActivity() {
         }
 
 
+
+        val loader = ChatLoader(mFirebaseDatabaseReference, user, user2)
         Log.d("Activity Name", activity)
         Log.d("ChatMessengerActivity", "User1 = $user")
         Log.d("ChatMessengerActivity", "User2 = $user2")
@@ -99,7 +100,7 @@ class ChatMessengerActivity : AppCompatActivity() {
 
         launch {
             messageLst.clear()
-            val loader = ChatLoader(mFirebaseDatabaseReference, user, user2)
+
             loader.loadChat()
             delay(1, TimeUnit.SECONDS)
 
@@ -183,7 +184,7 @@ class ChatMessengerActivity : AppCompatActivity() {
 
             override fun onTextChanged(charSequ: CharSequence?, start: Int, before: Int, count: Int) {
 
-                if (keyForChatRecord != null && mViewAdapter.objUser != null) {
+                if (keyForChatRecord != null && (mViewAdapter.objUser != null || loader.objUser1 != null)) {
                     //mViewAdapter.objUser = objUser1
                     mSendButton.isEnabled = charSequ.toString().trim().isNotEmpty()
                 }

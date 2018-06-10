@@ -87,9 +87,8 @@ class ChatMessengerAdapter(private var chatHistory: ArrayList<Message>,var objUs
         val diffResult : DiffUtil.DiffResult = DiffUtil.calculateDiff(MyDiffUtil(chatHistory,newChatHistory))
         diffResult.dispatchUpdatesTo(this)
         chatHistory = newChatHistory
-         if(user!= null) {
-             objUser = user
-         }
+         objUser = user
+
 
     }
 
@@ -100,7 +99,7 @@ class ChatMessengerAdapter(private var chatHistory: ArrayList<Message>,var objUs
 class CustomChatViewHolder (val view : View) :  RecyclerView.ViewHolder(view) , View.OnClickListener{
     override fun onClick(v: View?) {
 
-        Toast.makeText(view.context,"You clicked on the message", Toast.LENGTH_LONG).show()
+        //Toast.makeText(view.context,"You clicked on the message", Toast.LENGTH_LONG).show()
     }
 
     init {

@@ -9,11 +9,11 @@ import fr.antoinebaudot.lab1mad.User
 
 class ChatLoader (val reference : DatabaseReference, val user1 : String, val user2 : String){
 
+
     var messageLst : ArrayList<Message>? = null
     var keyForChatRecord : String? = null
     var objUser1 : User? = null
     var objUser2 : User? = null
-
 
 
 
