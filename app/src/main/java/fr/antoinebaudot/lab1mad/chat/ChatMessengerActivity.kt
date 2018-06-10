@@ -147,6 +147,8 @@ class ChatMessengerActivity : AppCompatActivity() {
 
 
                             mViewAdapter.updateList(messageLst, objUser1)
+                            //mViewAdapter.objUser = objUser1
+
                             mViewAdapter.notifyItemInserted(messageLst.size)
                             mRecyclerView.scrollToPosition(mViewAdapter.itemCount - 1);
 
@@ -181,8 +183,8 @@ class ChatMessengerActivity : AppCompatActivity() {
 
             override fun onTextChanged(charSequ: CharSequence?, start: Int, before: Int, count: Int) {
 
-                if (keyForChatRecord != null && objUser1 != null) {
-                    mViewAdapter.objUser = objUser1
+                if (keyForChatRecord != null && mViewAdapter.objUser != null) {
+                    //mViewAdapter.objUser = objUser1
                     mSendButton.isEnabled = charSequ.toString().trim().isNotEmpty()
                 }
 

@@ -87,7 +87,9 @@ class ChatMessengerAdapter(private var chatHistory: ArrayList<Message>,var objUs
         val diffResult : DiffUtil.DiffResult = DiffUtil.calculateDiff(MyDiffUtil(chatHistory,newChatHistory))
         diffResult.dispatchUpdatesTo(this)
         chatHistory = newChatHistory
-         objUser = user
+         if(user!= null) {
+             objUser = user
+         }
 
     }
 
