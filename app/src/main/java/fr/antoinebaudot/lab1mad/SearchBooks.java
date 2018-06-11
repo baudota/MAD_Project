@@ -167,7 +167,7 @@ public class SearchBooks extends AppCompatActivity {
 
 
                         }else {
-                            Toast.makeText(getApplicationContext(),"There is no " + searchType + " like that",Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(),"There is no book with the " + searchType + " of " + keyword ,Toast.LENGTH_LONG).show();
                             pB.setVisibility(View.GONE);
                             resultsLayout.setVisibility(View.VISIBLE);
 
